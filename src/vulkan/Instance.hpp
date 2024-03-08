@@ -17,6 +17,8 @@ namespace Acamarachi::Vulkan
         Instance(const Instance &) = delete;
         ~Instance();
 
+        // Create a Vulkan Instance with the specified extensions and validation layers
+        // It will also create a debug messenger store for more information about Vulkan
         bool initialize(const char *appName, std::vector<const char *> requiredExtensions, std::vector<const char *> requiredValidationLayers);
         void deinitialize();
 

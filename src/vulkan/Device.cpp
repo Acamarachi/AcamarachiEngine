@@ -11,10 +11,12 @@ Acamarachi::Vulkan::Device::~Device()
 
 bool Acamarachi::Vulkan::Device::initialize(std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers)
 {
+    // (Void) suppress compilater warning
     (void)requiredExtensions;
     (void)requiredValidationLayers;
     std::vector<VkPhysicalDevice> physicalDevices;
     
+    // Ask the instance for avalible devices
     if (!instance.getAvailablePhysicalDevices(physicalDevices)) {
         return false;
     }

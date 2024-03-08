@@ -46,6 +46,9 @@ bool Acamarachi::Vulkan::Instance::initialize(const char *appName, std::vector<c
 
     if (requiredValidationLayers.size() != 0)
     {
+        // VK_EXT_debug_utils allow more debug information to the user
+        // for more info see : https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_debug_utils.html
+
         PFN_vkCreateDebugUtilsMessengerEXT fn = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(this->handle, "vkCreateDebugUtilsMessengerEXT");
         VkDebugUtilsMessengerCreateInfoEXT debugMessengerCreateInfo = {};
         debugMessengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
@@ -75,12 +78,16 @@ void Acamarachi::Vulkan::Instance::deinitialize()
 
 bool Acamarachi::Vulkan::Instance::getAvailablePhysicalDevices(std::vector<VkPhysicalDevice>& physicalDevices)
 {
+    // Get the number of physical devices
     uint32_t count = 0;
     VkResult res = vkEnumeratePhysicalDevices(this->handle, &count, 0);
     if (res != VK_SUCCESS) {
         return false;
     }
+
     physicalDevices.resize(count);
+
+    // Get the actuals physcial devices
     res = vkEnumeratePhysicalDevices(this->handle, &count, physicalDevices.data());
     if (res != VK_SUCCESS) {
         return false;
