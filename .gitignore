@@ -34,3 +34,6 @@
 # Visual Studio & Visual Studio Code
 build
 .vscode
+
+out\
+.vs
