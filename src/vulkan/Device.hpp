@@ -3,6 +3,7 @@
 
 #include <vulkan/vulkan.h>
 #include <vector>
+
 #include "Instance.hpp"
 
 namespace Acamarachi::Vulkan
@@ -28,6 +29,8 @@ namespace Acamarachi::Vulkan
 
         // Perform a check to see if the device is what we want
         bool isPhysicalDeviceSuitable(VkPhysicalDevice device);
+
+        //TODO: ADD RATING FOR THE BEST PHYSICAL DEVICE
     };
 
 }
