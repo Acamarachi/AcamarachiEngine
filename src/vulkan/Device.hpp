@@ -21,10 +21,13 @@ namespace Acamarachi::Vulkan
         Device(const Device &) = delete;
         ~Device();
 
-        // Initialize de devices, if the instance find some physical devices
+        // Initialize the device and ask the instance to find some physical devices
         // then it will update physicalDevice and handle
         bool initialize(std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers);
         void deinitialize();
+
+        // Perform a check to see if the device is what we want
+        bool isPhysicalDeviceSuitable(VkPhysicalDevice device);
     };
 
 }
