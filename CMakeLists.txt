@@ -20,9 +20,9 @@ target_sources(
     src/vulkan/Instance.hpp
     src/vulkan/Device.cpp
     src/vulkan/Device.hpp
+    src/vulkan/Surface.hpp
+    src/vulkan/Surface.cpp
     src/vulkan/Utils.hpp
-    src/vulkan/Queue.cpp
-    src/vulkan/Queue.hpp
 )
 
 #add build property
