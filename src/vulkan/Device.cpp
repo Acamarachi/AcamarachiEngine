@@ -1,8 +1,10 @@
+#include <iostream>
 #include "Device.hpp"
 
-Acamarachi::Vulkan::Device::Device(Acamarachi::Vulkan::Instance &instance, Acamarachi::Vulkan::Surface& surface)
+Acamarachi::Vulkan::Device::Device(Acamarachi::Vulkan::Instance &instance, Acamarachi::Vulkan::Surface &surface)
     : instance(instance), surface(surface)
-{ }
+{
+}
 
 Acamarachi::Vulkan::Device::~Device()
 {
@@ -12,9 +14,10 @@ Acamarachi::Vulkan::Device::~Device()
 bool Acamarachi::Vulkan::Device::initialize(std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers)
 {
     std::vector<VkPhysicalDevice> physicalDevices;
-    
+
     // Ask the instance for available physical devices
-    if (!instance.getAvailablePhysicalDevices(physicalDevices)) {
+    if (!instance.getAvailablePhysicalDevices(physicalDevices))
+    {
         return false;
     }
 
@@ -28,7 +31,20 @@ bool Acamarachi::Vulkan::Device::initialize(std::vector<const char *> requiredEx
         }
     }
 
-    if (physicalDevice == VK_NULL_HANDLE || !updateSurfaceCapabilities() || !findQueueFamilies()) {
+    if (physicalDevice == VK_NULL_HANDLE)
+    {
+        return false;
+    }
+
+    if (!updateSurfaceCapabilities())
+    {
+        std::cerr << "Failed to query physical device surface capabilities" << std::endl;
+        return false;
+    }
+
+    if (!findQueueFamilies())
+    {
+        std::cerr << "Failed to query physical device queues " << graphicQueue.familyIndex << ", " << presentQueue.familyIndex << ", " << transferQueue.familyIndex << ", " << std::endl;
         return false;
     }
 
@@ -41,12 +57,12 @@ bool Acamarachi::Vulkan::Device::initialize(std::vector<const char *> requiredEx
 
     queueCreateInfo[1].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueCreateInfo[1].queueCount = 1;
-    queueCreateInfo[1].queueFamilyIndex = graphicQueue.familyIndex;
+    queueCreateInfo[1].queueFamilyIndex = presentQueue.familyIndex;
     queueCreateInfo[1].pQueuePriorities = &queuePriority;
 
     queueCreateInfo[2].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueCreateInfo[2].queueCount = 1;
-    queueCreateInfo[2].queueFamilyIndex = graphicQueue.familyIndex;
+    queueCreateInfo[2].queueFamilyIndex = transferQueue.familyIndex;
     queueCreateInfo[2].pQueuePriorities = &queuePriority;
 
     VkPhysicalDeviceVulkan12Features featureVk1_2 = {};
@@ -74,7 +90,8 @@ bool Acamarachi::Vulkan::Device::initialize(std::vector<const char *> requiredEx
     deviceCreateInfo.pEnabledFeatures = &features;
 
     VkResult res = vkCreateDevice(physicalDevice, &deviceCreateInfo, 0, &this->handle);
-    if (res != VK_SUCCESS) {
+    if (res != VK_SUCCESS)
+    {
         return false;
     }
 
@@ -114,20 +131,24 @@ bool Acamarachi::Vulkan::Device::findQueueFamilies()
     std::vector<VkQueueFamilyProperties> properties = std::vector<VkQueueFamilyProperties>(count);
     vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, properties.data());
 
-    for (uint32_t i = 0; i < count; i++) {
+    for (uint32_t i = 0; i < count; i++)
+    {
         VkQueueFamilyProperties current = properties[i];
         VkBool32 supported = VK_FALSE;
         vkGetPhysicalDeviceSurfaceSupportKHR(physicalDevice, i, surface.handle, &supported);
-        if (graphicQueue.familyIndex == std::numeric_limits<uint32_t>::max() && current.queueFlags & VK_QUEUE_GRAPHICS_BIT) {
+        if (graphicQueue.familyIndex == std::numeric_limits<uint32_t>::max() && current.queueFlags & VK_QUEUE_GRAPHICS_BIT)
+        {
             graphicQueue.familyIndex = i;
-        } else if (transferQueue.familyIndex == std::numeric_limits<uint32_t>::max() && current.queueFlags & VK_QUEUE_TRANSFER_BIT) {
+        }
+        else if (transferQueue.familyIndex == std::numeric_limits<uint32_t>::max() && current.queueFlags & VK_QUEUE_TRANSFER_BIT)
+        {
             transferQueue.familyIndex = i;
-        } else if (presentQueue.familyIndex == std::numeric_limits<uint32_t>::max() && supported) {
+        }
+        else if (presentQueue.familyIndex == std::numeric_limits<uint32_t>::max() && supported)
+        {
             presentQueue.familyIndex = i;
         }
     }
 
-    return graphicQueue.familyIndex == std::numeric_limits<uint32_t>::max()
-        || transferQueue.familyIndex == std::numeric_limits<uint32_t>::max()
-        || presentQueue.familyIndex == std::numeric_limits<uint32_t>::max();
+    return !(graphicQueue.familyIndex == std::numeric_limits<uint32_t>::max() || transferQueue.familyIndex == std::numeric_limits<uint32_t>::max() || presentQueue.familyIndex == std::numeric_limits<uint32_t>::max());
 }

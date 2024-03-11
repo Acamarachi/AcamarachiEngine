@@ -22,6 +22,8 @@ target_sources(
     src/vulkan/Device.hpp
     src/vulkan/Surface.hpp
     src/vulkan/Surface.cpp
+    src/vulkan/Swapchain.hpp
+    src/vulkan/Swapchain.cpp
     src/vulkan/Utils.hpp
 )
 
