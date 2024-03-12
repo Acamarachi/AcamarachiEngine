@@ -1,5 +1,6 @@
 #include <iostream>
 #include <GLFW/glfw3.h>
+#include "maths/linear.hpp"
 
 void error_callback(int error, const char* description)
 {

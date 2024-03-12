@@ -9,7 +9,15 @@ if(POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-add_executable(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src/main.cpp)
+add_executable(${PROJECT_NAME})
+
+target_sources(
+    ${PROJECT_NAME}
+    PRIVATE
+
+    src/main.cpp
+    src/maths/linear.hpp
+)
 
 #add build property
 set_target_properties(${PROJECT_NAME} PROPERTIES
