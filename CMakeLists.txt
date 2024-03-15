@@ -16,6 +16,7 @@ target_sources(
     PRIVATE
 
     src/main.cpp
+    src/maths/vector.hpp
     src/maths/linear.hpp
 )
 
