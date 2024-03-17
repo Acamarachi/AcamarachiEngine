@@ -4,36 +4,26 @@
 #include <algorithm>
 #include "Swapchain.hpp"
 
-Acamarachi::Vulkan::Swapchain::Swapchain(Acamarachi::Vulkan::Device &device)
-    : device(device), surface(device.surface)
-{
-}
-
-Acamarachi::Vulkan::Swapchain::~Swapchain()
-{
-    deinitialize();
-}
-
-bool Acamarachi::Vulkan::Swapchain::initialize(uint32_t width, uint32_t height)
+bool Acamarachi::Vulkan::Swapchain::initialize(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, uint32_t width, uint32_t height)
 {
     extent.width = width;
     extent.height = height;
 
     surfaceFormat.format = VK_FORMAT_B8G8R8A8_UNORM;
     surfaceFormat.colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
-    if (!findSurfaceFormat(&surfaceFormat))
+    if (!findSurfaceFormat(device, surface, &surfaceFormat))
     {
         return false;
     }
 
     presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
-    if (!findPresentMode(&presentMode))
+    if (!findPresentMode(device, surface, &presentMode))
     {
         return false;
     }
 
-    findExtent();
-    uint32_t imageCount = findImageCount();
+    findExtent(device);
+    uint32_t imageCount = findImageCount(device);
 
     uint32_t queueFamilies[2] = {device.graphicQueue.familyIndex, device.presentQueue.familyIndex};
     VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
@@ -96,7 +86,7 @@ bool Acamarachi::Vulkan::Swapchain::initialize(uint32_t width, uint32_t height)
     return true;
 }
 
-void Acamarachi::Vulkan::Swapchain::deinitialize()
+void Acamarachi::Vulkan::Swapchain::deinitialize(Acamarachi::Vulkan::Device& device)
 {
     for (std::size_t i = 0; i < imageViews.size(); i++)
     {
@@ -105,7 +95,7 @@ void Acamarachi::Vulkan::Swapchain::deinitialize()
     vkDestroySwapchainKHR(device.handle, handle, 0);
 }
 
-bool Acamarachi::Vulkan::Swapchain::findSurfaceFormat(VkSurfaceFormatKHR *requested)
+bool Acamarachi::Vulkan::Swapchain::findSurfaceFormat(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, VkSurfaceFormatKHR *requested)
 {
     uint32_t count = 0;
     if (vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice, surface.handle, &count, 0) != VK_SUCCESS)
@@ -131,7 +121,7 @@ bool Acamarachi::Vulkan::Swapchain::findSurfaceFormat(VkSurfaceFormatKHR *reques
     return true;
 }
 
-bool Acamarachi::Vulkan::Swapchain::findPresentMode(VkPresentModeKHR *requested)
+bool Acamarachi::Vulkan::Swapchain::findPresentMode(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, VkPresentModeKHR *requested)
 {
     uint32_t count = 0;
     if (vkGetPhysicalDeviceSurfacePresentModesKHR(device.physicalDevice, surface.handle, &count, 0) != VK_SUCCESS)
@@ -157,7 +147,7 @@ bool Acamarachi::Vulkan::Swapchain::findPresentMode(VkPresentModeKHR *requested)
     return false;
 }
 
-void Acamarachi::Vulkan::Swapchain::findExtent()
+void Acamarachi::Vulkan::Swapchain::findExtent(Acamarachi::Vulkan::Device& device)
 {
     if (device.surfaceCapabilites.currentExtent.width != std::numeric_limits<uint32_t>::max())
     {
@@ -170,7 +160,7 @@ void Acamarachi::Vulkan::Swapchain::findExtent()
     }
 }
 
-uint32_t Acamarachi::Vulkan::Swapchain::findImageCount()
+uint32_t Acamarachi::Vulkan::Swapchain::findImageCount(Acamarachi::Vulkan::Device& device)
 {
     uint32_t minImageCount = device.surfaceCapabilites.minImageCount + 1;
     if (device.surfaceCapabilites.maxImageCount > 0)

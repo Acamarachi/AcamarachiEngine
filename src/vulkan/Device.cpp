@@ -1,17 +1,7 @@
 #include <iostream>
 #include "Device.hpp"
 
-Acamarachi::Vulkan::Device::Device(Acamarachi::Vulkan::Instance &instance, Acamarachi::Vulkan::Surface &surface)
-    : instance(instance), surface(surface)
-{
-}
-
-Acamarachi::Vulkan::Device::~Device()
-{
-    this->deinitialize();
-}
-
-bool Acamarachi::Vulkan::Device::initialize(std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers)
+bool Acamarachi::Vulkan::Device::initialize(Acamarachi::Vulkan::Instance &instance, Acamarachi::Vulkan::Surface &surface, std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers)
 {
     std::vector<VkPhysicalDevice> physicalDevices;
 
@@ -36,13 +26,13 @@ bool Acamarachi::Vulkan::Device::initialize(std::vector<const char *> requiredEx
         return false;
     }
 
-    if (!updateSurfaceCapabilities())
+    if (!updateSurfaceCapabilities(surface))
     {
         std::cerr << "Failed to query physical device surface capabilities" << std::endl;
         return false;
     }
 
-    if (!findQueueFamilies())
+    if (!findQueueFamilies(surface))
     {
         std::cerr << "Failed to query physical device queues " << graphicQueue.familyIndex << ", " << presentQueue.familyIndex << ", " << transferQueue.familyIndex << ", " << std::endl;
         return false;
@@ -118,12 +108,12 @@ bool Acamarachi::Vulkan::Device::isPhysicalDeviceSuitable(VkPhysicalDevice devic
     return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
 }
 
-bool Acamarachi::Vulkan::Device::updateSurfaceCapabilities()
+bool Acamarachi::Vulkan::Device::updateSurfaceCapabilities(Acamarachi::Vulkan::Surface& surface)
 {
     return vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface.handle, &surfaceCapabilites) == VK_SUCCESS;
 }
 
-bool Acamarachi::Vulkan::Device::findQueueFamilies()
+bool Acamarachi::Vulkan::Device::findQueueFamilies(Acamarachi::Vulkan::Surface& surface)
 {
     uint32_t count = 0;
     vkGetPhysicalDeviceQueueFamilyProperties(physicalDevice, &count, 0);

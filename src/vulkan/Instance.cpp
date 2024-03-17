@@ -70,10 +70,10 @@ void Acamarachi::Vulkan::Instance::deinitialize()
 {
     if (this->debugMessenger != VK_NULL_HANDLE)
     {
-        PFN_vkDestroyDebugUtilsMessengerEXT fn = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(this->handle, "vkDestroyDebugUtilsMessengerEXT");
-        fn(this->handle, this->debugMessenger, 0);
+        PFN_vkDestroyDebugUtilsMessengerEXT fn = (PFN_vkDestroyDebugUtilsMessengerEXT)vkGetInstanceProcAddr(handle, "vkDestroyDebugUtilsMessengerEXT");
+        fn(handle, debugMessenger, 0);
     }
-    vkDestroyInstance(this->handle, 0);
+    vkDestroyInstance(handle, 0);
 }
 
 bool Acamarachi::Vulkan::Instance::getAvailablePhysicalDevices(std::vector<VkPhysicalDevice>& physicalDevices)

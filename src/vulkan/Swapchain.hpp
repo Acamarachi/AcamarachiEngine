@@ -12,9 +12,6 @@ namespace Acamarachi::Vulkan
 
     class Swapchain {
     public:
-        Device& device;
-        Surface& surface;
-
         VkSwapchainKHR handle = VK_NULL_HANDLE;
         VkSurfaceFormatKHR surfaceFormat;
         VkPresentModeKHR presentMode;
@@ -22,19 +19,19 @@ namespace Acamarachi::Vulkan
         std::vector<VkImage> images;
         std::vector<VkImageView> imageViews;
 
-        Swapchain(Device&);
+        Swapchain() = default;
         Swapchain(const Swapchain&) = delete;
 
-        ~Swapchain();
+        ~Swapchain() = default;
 
-        bool initialize(uint32_t width, uint32_t height);
-        void deinitialize();
+        bool initialize(Device& device, Surface& surface, uint32_t width, uint32_t height);
+        void deinitialize(Device& device);
 
     private:
-        bool findSurfaceFormat(VkSurfaceFormatKHR* requested);
-        bool findPresentMode(VkPresentModeKHR* requested);
-        void findExtent();
-        uint32_t findImageCount();
+        bool findSurfaceFormat(Device& device, Surface& surface, VkSurfaceFormatKHR* requested);
+        bool findPresentMode(Device& device, Surface& surface, VkPresentModeKHR* requested);
+        void findExtent(Device& device);
+        uint32_t findImageCount(Device& device);
     };
 
 }

@@ -1,16 +1,7 @@
 #include "Utils.hpp"
 #include "FrameInformation.hpp"
 
-Acamarachi::Vulkan::FrameInformation::FrameInformation(Device &device, Swapchain& swapchain)
-    : device(device), swapchain(swapchain)
-{ }
-
-Acamarachi::Vulkan::FrameInformation::~FrameInformation()
-{
-    deinitialize();
-}
-
-bool Acamarachi::Vulkan::FrameInformation::initialize()
+bool Acamarachi::Vulkan::FrameInformation::initialize(Acamarachi::Vulkan::Device &device)
 {
     VkCommandPoolCreateInfo commandPoolCreateInfo = {};
     commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
@@ -61,7 +52,7 @@ bool Acamarachi::Vulkan::FrameInformation::initialize()
     return true;
 }
 
-void Acamarachi::Vulkan::FrameInformation::deinitialize()
+void Acamarachi::Vulkan::FrameInformation::deinitialize(Acamarachi::Vulkan::Device &device)
 {
     for (std::size_t i = 0; i < FRAME_BUFFERING; ++i) {
         vkDestroyFence(device.handle, frameData[i].renderFence, 0);
@@ -76,7 +67,7 @@ Acamarachi::Vulkan::FrameManagementData Acamarachi::Vulkan::FrameInformation::ge
     return frameData[currentFrame % FRAME_BUFFERING];
 }
 
-bool Acamarachi::Vulkan::FrameInformation::draw()
+bool Acamarachi::Vulkan::FrameInformation::draw(Acamarachi::Vulkan::Device &device, Acamarachi::Vulkan::Swapchain& swapchain)
 {
     FrameManagementData currentFrame = getCurrentFrameData();
     vkWaitForFences(device.handle, 1, &currentFrame.renderFence, VK_TRUE, 1000000000);
@@ -95,7 +86,6 @@ bool Acamarachi::Vulkan::FrameInformation::draw()
 
     transitionImage(currentFrame.primaryCommandBuffer, swapchain.images[imageIndex], VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_GENERAL);
 
-	//make a clear-color from frame number. This will flash with a 120 frame period.
 	VkClearColorValue clearValue;
 	clearValue = { { 0.0f, 0.0f, 1.0f, 1.0f } };
 

@@ -19,8 +19,6 @@ namespace Acamarachi::Vulkan
     class Device
     {
     public:
-        Instance& instance;
-        Surface& surface;
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
         VkDevice handle = VK_NULL_HANDLE;
         VkSurfaceCapabilitiesKHR surfaceCapabilites = {};
@@ -33,21 +31,22 @@ namespace Acamarachi::Vulkan
 
         // To create a device you need a working Vulkan instance, otherwise it will not work
         // as the devices a get through the instance
-        Device(Instance& instance, Surface& surface);
+        Device() = default;
+
         Device(const Device &) = delete;
-        ~Device();
+        ~Device() = default;
 
         // Initialize the device and ask the instance to find some physical devices
         // then it will update physicalDevice and handle
-        bool initialize(std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers);
+        bool initialize(Instance& instance, Surface& surface, std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers);
         void deinitialize();
 
         // Perform a check to see if the device is what we want
         bool isPhysicalDeviceSuitable(VkPhysicalDevice device);
-        bool updateSurfaceCapabilities();
+        bool updateSurfaceCapabilities(Acamarachi::Vulkan::Surface& surface);
 
     private:
-        bool findQueueFamilies();
+        bool findQueueFamilies(Acamarachi::Vulkan::Surface& surface);
 
         //TODO: ADD RATING FOR THE BEST PHYSICAL DEVICE
     };

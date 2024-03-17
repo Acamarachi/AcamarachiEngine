@@ -24,22 +24,20 @@ namespace Acamarachi::Vulkan
     class FrameInformation
     {
     public:
-        Device &device;
-        Swapchain& swapchain;
         FrameManagementData frameData[FRAME_BUFFERING];
         std::size_t currentFrame = 0;
 
-        FrameInformation(Device &device, Swapchain& swapchain);
+        FrameInformation() = default;
         FrameInformation(const FrameInformation &) = delete;
 
-        ~FrameInformation();
+        ~FrameInformation() = default;
 
-        bool initialize();
-        void deinitialize();
+        bool initialize(Device &device);
+        void deinitialize(Device &device);
 
         FrameManagementData getCurrentFrameData();
 
-        bool draw();
+        bool draw(Device &device, Swapchain& swapchain);
     };
 
 }

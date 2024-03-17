@@ -65,8 +65,8 @@ int main()
         return 1;
     }
 
-    Acamarachi::Vulkan::Surface surface = Acamarachi::Vulkan::Surface(instance);
-    if (!surface.initialize(window, reinterpret_cast<Acamarachi::Vulkan::CreateWindowSurfaceFunction *>(glfwCreateWindowSurface)))
+    Acamarachi::Vulkan::Surface surface = Acamarachi::Vulkan::Surface();
+    if (!surface.initialize(instance, window, reinterpret_cast<Acamarachi::Vulkan::CreateWindowSurfaceFunction *>(glfwCreateWindowSurface)))
     {
         std::cerr << "Failed to create surface" << std::endl;
         glfwDestroyWindow(window);
@@ -74,8 +74,8 @@ int main()
         return 1;
     }
 
-    Acamarachi::Vulkan::Device device = Acamarachi::Vulkan::Device(instance, surface);
-    if (!device.initialize(device_extensions, instance_layers))
+    Acamarachi::Vulkan::Device device = Acamarachi::Vulkan::Device();
+    if (!device.initialize(instance, surface, device_extensions, instance_layers))
     {
         std::cerr << "Failed to create device" << std::endl;
         glfwDestroyWindow(window);
@@ -83,8 +83,8 @@ int main()
         return 1;
     }
 
-    Acamarachi::Vulkan::Swapchain swapchain = Acamarachi::Vulkan::Swapchain(device);
-    if (!swapchain.initialize(1280, 720))
+    Acamarachi::Vulkan::Swapchain swapchain = Acamarachi::Vulkan::Swapchain();
+    if (!swapchain.initialize(device, surface, 1280, 720))
     {
         std::cerr << "Failed to create swapchain" << std::endl;
         glfwDestroyWindow(window);
@@ -92,8 +92,8 @@ int main()
         return 1;
     }
 
-    Acamarachi::Vulkan::FrameInformation frameInformation = Acamarachi::Vulkan::FrameInformation(device, swapchain);
-    if (!frameInformation.initialize())
+    Acamarachi::Vulkan::FrameInformation frameInformation = Acamarachi::Vulkan::FrameInformation();
+    if (!frameInformation.initialize(device))
     {
         std::cerr << "Failed to create frame information" << std::endl;
         glfwDestroyWindow(window);
@@ -104,10 +104,16 @@ int main()
     while (!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        (void)frameInformation.draw();
+        (void)frameInformation.draw(device, swapchain);
     }
 
     vkDeviceWaitIdle(device.handle);
+    frameInformation.deinitialize(device);
+    swapchain.deinitialize(device);
+    device.deinitialize();
+    surface.deinitialize(instance);
+    //instance.deinitialize();
+
     glfwDestroyWindow(window);
     glfwTerminate();
     return 0;

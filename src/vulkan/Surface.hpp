@@ -14,17 +14,16 @@ namespace Acamarachi::Vulkan
     class Surface
     {
     public:
-        Instance &instance;
         VkSurfaceKHR handle;
 
-        Surface(Instance &instance);
+        Surface() = default;
         Surface(const Surface &) = delete;
 
-        ~Surface();
+        ~Surface() = default;
 
-        bool initialize(void* window, CreateWindowSurfaceFunction*);
+        bool initialize(Instance &instance, void* window, CreateWindowSurfaceFunction*);
 
-        void deinitialize();
+        void deinitialize(Acamarachi::Vulkan::Instance& instance);
     };
 
 }
