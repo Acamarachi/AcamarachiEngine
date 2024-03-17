@@ -7,10 +7,9 @@
 namespace Acamarachi::Vulkan
 {
 
-    const char *vkErrorToString(VkResult res)
-    {
-        return string_VkResult(res);
-    }
+    const char *vkErrorToString(VkResult res);
+
+    void transitionImage(VkCommandBuffer cmd, VkImage img, VkImageLayout srcLayout, VkImageLayout dstLayout);
 
 };
 

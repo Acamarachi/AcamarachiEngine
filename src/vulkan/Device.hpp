@@ -29,6 +29,8 @@ namespace Acamarachi::Vulkan
         Queue presentQueue = {};
         Queue transferQueue = {};
 
+        VkCommandPool graphicCommandPool = VK_NULL_HANDLE;
+
         // To create a device you need a working Vulkan instance, otherwise it will not work
         // as the devices a get through the instance
         Device(Instance& instance, Surface& surface);

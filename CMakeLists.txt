@@ -24,7 +24,10 @@ target_sources(
     src/vulkan/Surface.cpp
     src/vulkan/Swapchain.hpp
     src/vulkan/Swapchain.cpp
+    src/vulkan/FrameInformation.hpp
+    src/vulkan/FrameInformation.cpp
     src/vulkan/Utils.hpp
+    src/vulkan/Utils.cpp
 )
 
 #add build property

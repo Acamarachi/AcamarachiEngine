@@ -44,7 +44,7 @@ bool Acamarachi::Vulkan::Swapchain::initialize(uint32_t width, uint32_t height)
     swapchainCreateInfo.imageExtent = extent;
     swapchainCreateInfo.imageArrayLayers = 1;
     swapchainCreateInfo.minImageCount = imageCount;
-    swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT;
+    swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
     swapchainCreateInfo.presentMode = presentMode;
     swapchainCreateInfo.queueFamilyIndexCount = 2;
     swapchainCreateInfo.pQueueFamilyIndices = queueFamilies;
