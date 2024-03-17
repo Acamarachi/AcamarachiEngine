@@ -11,6 +11,7 @@ namespace Acamarachi::Maths
 		vec2(float x) : data{ x,x } {};
 		vec2() : data{ 0.0f,0.0f } {};
 		vec2(vec2& o) : data{ o.data[0], o.data[1] } {};
+		vec2(const vec2& o) : data{ o.data[0], o.data[1] } {};
 
 		//getter with with litteral
 		constexpr float x() const { return data[0]; }
@@ -43,6 +44,7 @@ namespace Acamarachi::Maths
 		vec3(float x) : data{ x,x,x } {}
 		vec3() : data{ 0.0f,0.0f,0.0f } {}
 		vec3(vec3& o) : data{ o.data[0],o.data[1],o.data[2] } {}
+		vec3(const vec3& o) : data{ o.data[0],o.data[1],o.data[2] } {}
 
 		//vec2 to vec3
 		vec3(vec2& o, float z) : data{ o.data[0], o.data[1], z } {}
@@ -81,6 +83,7 @@ namespace Acamarachi::Maths
 		vec4(float x) : data{ x,x,x,x } {}
 		vec4() : data{ 0.0f,0.0f,0.0f,0.0f } {}
 		vec4(vec4& o) : data{ o.data[0],o.data[1],o.data[2],o.data[3] } {}
+		vec4(const vec4& o) : data{ o.data[0],o.data[1],o.data[2],o.data[3] } {}
 
 		//vec2 to vec4
 		vec4(vec2& o, float z, float w) : data{ o.data[0], o.data[1], z , w } {}
@@ -137,6 +140,25 @@ namespace Acamarachi::Maths
 		a[3] += o[3];
 	}
 
+	//vector +=
+	void operator+=(vec2& a, float o) {
+		a[0] += o;
+		a[1] += o;
+	}
+
+	void operator+=(vec3& a, float o) {
+		a[0] += o;
+		a[1] += o;
+		a[2] += o;
+	}
+
+	void operator+=(vec4& a, float o) {
+		a[0] += o;
+		a[1] += o;
+		a[2] += o;
+		a[3] += o;
+	}
+
 	//vector + vector
 	vec2 operator+(vec2 a, vec2 o)
 	{
@@ -189,6 +211,25 @@ namespace Acamarachi::Maths
 		a[1] -= o[1];
 		a[2] -= o[2];
 		a[3] -= o[3];
+	}
+
+	//vector -=
+	void operator-=(vec2& a, float o) {
+		a[0] -= o;
+		a[1] -= o;
+	}
+
+	void operator-=(vec3& a, float o) {
+		a[0] -= o;
+		a[1] -= o;
+		a[2] -= o;
+	}
+
+	void operator-=(vec4& a, float o) {
+		a[0] -= o;
+		a[1] -= o;
+		a[2] -= o;
+		a[3] -= o;
 	}
 
 	//vector - vector
@@ -245,6 +286,25 @@ namespace Acamarachi::Maths
 		a[3] *= o[3];
 	}
 
+	//vector *=
+	void operator*=(vec2& a, float o) {
+		a[0] *= o;
+		a[1] *= o;
+	}
+
+	void operator*=(vec3& a, float o) {
+		a[0] *= o;
+		a[1] *= o;
+		a[2] *= o;
+	}
+
+	void operator*=(vec4& a, float o) {
+		a[0] *= o;
+		a[1] *= o;
+		a[2] *= o;
+		a[3] *= o;
+	}
+
 	//vector * vector
 	vec2 operator*(vec2 a, vec2 o)
 	{
@@ -297,6 +357,25 @@ namespace Acamarachi::Maths
 		a[1] /= o[1];
 		a[2] /= o[2];
 		a[3] /= o[3];
+	}
+
+	//vector /=
+	void operator/=(vec2& a, float o) {
+		a[0] /= o;
+		a[1] /= o;
+	}
+
+	void operator/=(vec3& a, float o) {
+		a[0] /= o;
+		a[1] /= o;
+		a[2] /= o;
+	}
+
+	void operator/=(vec4& a, float o) {
+		a[0] /= o;
+		a[1] /= o;
+		a[2] /= o;
+		a[3] /= o;
 	}
 
 	//vector / vector
