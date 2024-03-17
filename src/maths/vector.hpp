@@ -411,5 +411,4 @@ namespace Acamarachi::Maths
 		return vec4(a[0] / o, a[1] / o, a[2] / o, a[3] / o);
 	};
 
-
 }

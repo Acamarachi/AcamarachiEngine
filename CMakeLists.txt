@@ -17,8 +17,9 @@ target_sources(
 
     src/main.cpp
     src/maths/vector.hpp
-    src/maths/linear.hpp
     src/maths/matrix.hpp
+    src/maths/linear.hpp
+    src/maths/linear.cpp
 )
 
 #add build property

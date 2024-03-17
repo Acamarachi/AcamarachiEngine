@@ -24,18 +24,6 @@ int main()
         return 1;
     }
 
-    //test
-    vec2 a(1.0f);
-    vec2 b(2.0f);
-
-    vec2 c = a - a;
-    std::cout << c[0] << " " << c[1] << std::endl;
-    std::cout << a[0] << " " << a[1] << std::endl;
-    std::cout << c[0] << " " << c[1] << std::endl;
-    c = c * (a + a)*5.0;
-
-    std::cout << c[0] << " " << c[1] << std::endl;
-
     glfwSetErrorCallback(error_callback);
 
     GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
