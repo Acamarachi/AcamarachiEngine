@@ -11,8 +11,21 @@ namespace Acamarachi::Maths
 		vec2() : data{ 0.0f,0.0f } {};
 		vec2(vec2& o) : data{ o.data[0], o.data[1] } {};
 
+		//getter with with litteral
 		constexpr float x() const { return data[0]; }
 		constexpr float y() const { return data[1]; }
+
+		//swizzle
+		vec2 operator[](int const arr[2])
+		{
+			return vec2(data[arr[0]], data[arr[1]]);
+		}
+
+		//getter with array position
+		float operator[](int pos)
+		{
+			return data[pos];
+		}
 
 	} vec2;
 
@@ -32,6 +45,18 @@ namespace Acamarachi::Maths
 		constexpr float x() const { return data[0]; }
 		constexpr float y() const { return data[1]; }
 		constexpr float z() const { return data[2]; }
+
+		//swizzle
+		vec3 operator[](int const arr[3])
+		{
+			return vec3(data[arr[0]], data[arr[1]], data[arr[2]]);
+		}
+
+		//getter with array position
+		float operator[](int pos)
+		{
+			return data[pos];
+		}
 
 	} vec3;
 
@@ -57,6 +82,18 @@ namespace Acamarachi::Maths
 		constexpr float y() const { return data[1]; }
 		constexpr float z() const { return data[2]; }
 		constexpr float w() const { return data[3]; }
+
+		//swizzle
+		vec4 operator[](int const arr[3])
+		{
+			return vec4(data[arr[0]], data[arr[1]], data[arr[2]], data[arr[3]]);
+		}
+
+		//getter with array position
+		float operator[](int pos)
+		{
+			return data[pos];
+		}
 
 	} vec4;
 
