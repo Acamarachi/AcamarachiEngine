@@ -3,5 +3,10 @@
 #include "vector.hpp"
 #include "matrix.hpp"
 
-//vector operation
 
+
+namespace Acamarachi::Maths
+{
+	
+
+}
