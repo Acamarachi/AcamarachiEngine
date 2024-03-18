@@ -95,6 +95,7 @@ bool Acamarachi::Vulkan::Device::initialize(Acamarachi::Vulkan::Instance &instan
 void Acamarachi::Vulkan::Device::deinitialize()
 {
     vkDestroyDevice(handle, 0);
+    handle = VK_NULL_HANDLE;
 }
 
 bool Acamarachi::Vulkan::Device::isPhysicalDeviceSuitable(VkPhysicalDevice device)

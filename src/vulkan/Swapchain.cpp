@@ -93,6 +93,7 @@ void Acamarachi::Vulkan::Swapchain::deinitialize(Acamarachi::Vulkan::Device& dev
         vkDestroyImageView(device.handle, imageViews[i], 0);
     }
     vkDestroySwapchainKHR(device.handle, handle, 0);
+    handle = VK_NULL_HANDLE;
 }
 
 bool Acamarachi::Vulkan::Swapchain::findSurfaceFormat(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, VkSurfaceFormatKHR *requested)

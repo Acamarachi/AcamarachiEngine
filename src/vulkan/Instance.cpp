@@ -74,6 +74,7 @@ void Acamarachi::Vulkan::Instance::deinitialize()
         fn(handle, debugMessenger, 0);
     }
     vkDestroyInstance(handle, 0);
+    handle = VK_NULL_HANDLE;
 }
 
 bool Acamarachi::Vulkan::Instance::getAvailablePhysicalDevices(std::vector<VkPhysicalDevice>& physicalDevices)

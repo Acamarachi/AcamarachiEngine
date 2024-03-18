@@ -16,6 +16,8 @@ target_sources(
     PRIVATE
 
     src/main.cpp
+    src/vulkan/Context.hpp
+    src/vulkan/Context.cpp
     src/vulkan/Instance.cpp
     src/vulkan/Instance.hpp
     src/vulkan/Device.cpp
