@@ -3,8 +3,6 @@
 #include "vector.hpp"
 #include "matrix.hpp"
 
-
-
 namespace Acamarachi::Maths
 {
 	mat2 transpose(mat2 m);
@@ -17,9 +15,9 @@ namespace Acamarachi::Maths
 
 	vec3 cross(vec3 x, vec3 y);
 
-	float distance(vec2 p0, vec2 p1);
-	float distance(vec3 p0, vec3 p1);
-	float distance(vec4 p0, vec4 p1);
+	float length(vec2 v);
+	float length(vec3 v);
+	float length(vec4 v);
 
 	vec2 normalize(vec2 x);
 	vec3 normalize(vec3 x);
