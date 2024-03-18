@@ -9,18 +9,9 @@ if(POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-add_executable(${PROJECT_NAME})
-
-target_sources(
-    ${PROJECT_NAME}
-    PRIVATE
-
-    src/main.cpp
-    src/maths/vector.hpp
-    src/maths/matrix.hpp
-    src/maths/linear.hpp
-    src/maths/linear.cpp
-)
+add_executable(
+    ${PROJECT_NAME} 
+    src/main.cpp src/maths/vector.hpp src/maths/matrix.hpp src/maths/linear.hpp src/maths/linear.cpp src/maths/vector.cpp "src/maths/matrix.cpp")
 
 #add build property
 set_target_properties(${PROJECT_NAME} PROPERTIES
