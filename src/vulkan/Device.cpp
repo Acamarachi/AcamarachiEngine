@@ -88,6 +88,8 @@ bool Acamarachi::Vulkan::Device::initialize(Acamarachi::Vulkan::Instance &instan
     vkGetDeviceQueue(handle, graphicQueue.familyIndex, 0, &graphicQueue.handle);
     vkGetDeviceQueue(handle, presentQueue.familyIndex, 0, &presentQueue.handle);
     vkGetDeviceQueue(handle, transferQueue.familyIndex, 0, &transferQueue.handle);
+    
+    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
 
     return true;
 }

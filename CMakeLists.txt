@@ -28,6 +28,10 @@ target_sources(
     src/vulkan/Swapchain.cpp
     src/vulkan/FrameInformation.hpp
     src/vulkan/FrameInformation.cpp
+    src/vulkan/GraphicPipelineBuilder.hpp
+    src/vulkan/GraphicPipelineBuilder.cpp
+    src/vulkan/Allocator.hpp
+    src/vulkan/Allocator.cpp
     src/vulkan/Utils.hpp
     src/vulkan/Utils.cpp
 )
