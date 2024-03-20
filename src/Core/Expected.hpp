@@ -35,7 +35,7 @@ namespace Acamarachi::Core
         std::variant<std::monostate, Result, Error> value;
     };
 
-    #define catch(expected) ;           \
+    #define catch_err(expected) ;           \
         if (!expected)
 }
 
