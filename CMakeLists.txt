@@ -12,12 +12,6 @@ endif()
 set(
   ACAMARACHi_CORE_SOURCES
   ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/LinearAllocator.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/LinearAllocator.cpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/FreeListAllocator.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/FreeListAllocator.cpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.cpp
 )
 
 add_executable(${PROJECT_NAME})
