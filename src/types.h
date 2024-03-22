@@ -44,3 +44,4 @@ static_assert(sizeof(u32) == 4, "Expected u32 to be 4 byte.");
 static_assert(sizeof(u64) == 8, "Expected u64 to be 8 byte.");
 static_assert(sizeof(f32) == 4, "Expected f32 to be 4 byte."); 
 static_assert(sizeof(f64) == 8, "Expected f64 to be 8 byte."); 
+static_assert(sizeof(bool32) == 4, "Expected bool32 to be 4 byte.");
