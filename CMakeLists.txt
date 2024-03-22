@@ -9,31 +9,28 @@ if(POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
+set(
+  ACAMARACHi_CORE_SOURCES
+  ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/LinearAllocator.hpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/LinearAllocator.cpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/FreeListAllocator.hpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/FreeListAllocator.cpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.hpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.cpp
+)
 
 add_executable(${PROJECT_NAME})
 target_sources(
-    ${PROJECT_NAME}
-    PRIVATE
+  ${PROJECT_NAME}
+  PRIVATE
 
-    src/main.cpp
-    src/vulkan/Context.hpp
-    src/vulkan/Context.cpp
-    src/vulkan/Instance.cpp
-    src/vulkan/Instance.hpp
-    src/vulkan/Device.cpp
-    src/vulkan/Device.hpp
-    src/vulkan/Surface.hpp
-    src/vulkan/Surface.cpp
-    src/vulkan/Swapchain.hpp
-    src/vulkan/Swapchain.cpp
-    src/vulkan/FrameInformation.hpp
-    src/vulkan/FrameInformation.cpp
-    src/vulkan/GraphicPipelineBuilder.hpp
-    src/vulkan/GraphicPipelineBuilder.cpp
-    src/vulkan/Allocator.hpp
-    src/vulkan/Allocator.cpp
-    src/vulkan/Utils.hpp
-    src/vulkan/Utils.cpp
+  ${CMAKE_SOURCE_DIR}/src/main.cpp
+  ${CMAKE_SOURCE_DIR}/src/types.h
+  ${CMAKE_SOURCE_DIR}/src/platform.h
+  ${CMAKE_SOURCE_DIR}/src/config.h
+  ${CMAKE_SOURCE_DIR}/src/macros.h
+  ${ACAMARACHi_CORE_SOURCES}
 )
 
 #add build property
