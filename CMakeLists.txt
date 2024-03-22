@@ -12,12 +12,30 @@ endif()
 set(
   ACAMARACHi_CORE_SOURCES
   ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/LinearAllocator.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/LinearAllocator.cpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/FreeListAllocator.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/FreeListAllocator.cpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.hpp
-  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.cpp
+)
+
+set(
+  ACAMARACHi_VULKAN_SOURCES
+
+  ${CMAKE_SOURCE_DIR}/src/main.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Context.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Context.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Instance.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Instance.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Device.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Device.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Surface.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Surface.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.cpp
 )
 
 add_executable(${PROJECT_NAME})
@@ -31,6 +49,7 @@ target_sources(
   ${CMAKE_SOURCE_DIR}/src/config.h
   ${CMAKE_SOURCE_DIR}/src/macros.h
   ${ACAMARACHi_CORE_SOURCES}
+  ${ACAMARACHi_VULKAN_SOURCES}
 )
 
 #add build property
