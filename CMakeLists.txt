@@ -26,6 +26,10 @@ target_sources(
   PRIVATE
 
   ${CMAKE_SOURCE_DIR}/src/main.cpp
+  ${CMAKE_SOURCE_DIR}/src/types.h
+  ${CMAKE_SOURCE_DIR}/src/platform.h
+  ${CMAKE_SOURCE_DIR}/src/config.h
+  ${CMAKE_SOURCE_DIR}/src/macros.h
   ${ACAMARACHi_CORE_SOURCES}
 )
 
