@@ -9,15 +9,10 @@ static VkBool32 debugMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT se
     return VK_FALSE;
 }
 
-Acamarachi::Vulkan::Instance::Instance() {}
-
-Acamarachi::Vulkan::Instance::~Instance()
+Acamarachi::Vulkan::Instance::Error Acamarachi::Vulkan::Instance::initialize(const char *appName, std::vector<const char *> requiredExtensions, std::vector<const char *> requiredValidationLayers)
 {
-    this->deinitialize();
-}
+    Acamarachi::Vulkan::Instance instance;
 
-bool Acamarachi::Vulkan::Instance::initialize(const char *appName, std::vector<const char *> requiredExtensions, std::vector<const char *> requiredValidationLayers)
-{
     VkApplicationInfo applicationInfo = {};
     applicationInfo.sType = VK_STRUCTURE_TYPE_APPLICATION_INFO;
     applicationInfo.pNext = 0;
@@ -37,11 +32,11 @@ bool Acamarachi::Vulkan::Instance::initialize(const char *appName, std::vector<c
     instanceCreateInfo.enabledExtensionCount = (uint32_t)requiredExtensions.size();
     instanceCreateInfo.ppEnabledExtensionNames = requiredExtensions.data();
 
-    VkResult result = vkCreateInstance(&instanceCreateInfo, 0, &this->handle);
+    VkResult result = vkCreateInstance(&instanceCreateInfo, 0, &instance.handle);
     if (result != VK_SUCCESS)
     {
         std::cerr << "Failed to initialized instance with error: " << Acamarachi::Vulkan::vkErrorToString(result) << std::endl;
-        return false;
+        return Acamarachi::Vulkan::VkResultToVulkanError(result);
     }
 
     if (requiredValidationLayers.size() != 0)
@@ -49,7 +44,7 @@ bool Acamarachi::Vulkan::Instance::initialize(const char *appName, std::vector<c
         // VK_EXT_debug_utils allow more debug information to the user
         // for more info see : https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_debug_utils.html
 
-        PFN_vkCreateDebugUtilsMessengerEXT fn = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(this->handle, "vkCreateDebugUtilsMessengerEXT");
+        PFN_vkCreateDebugUtilsMessengerEXT fn = (PFN_vkCreateDebugUtilsMessengerEXT)vkGetInstanceProcAddr(instance.handle, "vkCreateDebugUtilsMessengerEXT");
         VkDebugUtilsMessengerCreateInfoEXT debugMessengerCreateInfo = {};
         debugMessengerCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
         debugMessengerCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT |
@@ -61,9 +56,9 @@ bool Acamarachi::Vulkan::Instance::initialize(const char *appName, std::vector<c
                                                VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT;
         debugMessengerCreateInfo.pfnUserCallback = &debugMessengerCallback;
 
-        fn(this->handle, &debugMessengerCreateInfo, 0, &this->debugMessenger);
+        fn(instance.handle, &debugMessengerCreateInfo, 0, &instance.debugMessenger);
     }
-    return true;
+    return instance;
 }
 
 void Acamarachi::Vulkan::Instance::deinitialize()

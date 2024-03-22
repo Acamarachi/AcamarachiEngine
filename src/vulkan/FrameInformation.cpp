@@ -1,8 +1,11 @@
 #include "Utils.hpp"
 #include "FrameInformation.hpp"
 
-bool Acamarachi::Vulkan::FrameInformation::initialize(Acamarachi::Vulkan::Device &device)
+Acamarachi::Vulkan::FrameInformation::Error Acamarachi::Vulkan::FrameInformation::initialize(Acamarachi::Vulkan::Device &device)
 {
+    VkResult res = VK_SUCCESS;
+    Acamarachi::Vulkan::FrameInformation frameInfo;
+
     VkCommandPoolCreateInfo commandPoolCreateInfo = {};
     commandPoolCreateInfo.sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO;
     commandPoolCreateInfo.flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT;
@@ -22,34 +25,24 @@ bool Acamarachi::Vulkan::FrameInformation::initialize(Acamarachi::Vulkan::Device
     semaphoreCreateInfo.sType = VK_STRUCTURE_TYPE_SEMAPHORE_CREATE_INFO;
 
     for (std::size_t i = 0; i < FRAME_BUFFERING; ++i) {
-        if (vkCreateCommandPool(device.handle, &commandPoolCreateInfo, 0, &frameData[i].commandPool) != VK_SUCCESS)
-        {
-            return false;
-        }
-	    cmdAllocInfo.commandPool = frameData[i].commandPool;
+        res = vkCreateCommandPool(device.handle, &commandPoolCreateInfo, 0, &frameInfo.frameData[i].commandPool);
+        if (res != VK_SUCCESS) return VkResultToVulkanError(res);
+	    cmdAllocInfo.commandPool = frameInfo.frameData[i].commandPool;
 
-        if (vkAllocateCommandBuffers(device.handle, &cmdAllocInfo, &frameData[i].primaryCommandBuffer) != VK_SUCCESS)
-        {
-            return false;
-        }
+        res = vkAllocateCommandBuffers(device.handle, &cmdAllocInfo, &frameInfo.frameData[i].primaryCommandBuffer);
+        if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
-        if (vkCreateFence(device.handle, &fenceCreateInfo, 0, &frameData[i].renderFence) != VK_SUCCESS)
-        {
-            return false;
-        }
+        res = vkCreateFence(device.handle, &fenceCreateInfo, 0, &frameInfo.frameData[i].renderFence);
+        if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
-        if (vkCreateSemaphore(device.handle, &semaphoreCreateInfo, 0, &frameData[i].swapchainSemaphore) != VK_SUCCESS)
-        {
-            return false;
-        }
+        res = vkCreateSemaphore(device.handle, &semaphoreCreateInfo, 0, &frameInfo.frameData[i].swapchainSemaphore);
+        if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
-        if (vkCreateSemaphore(device.handle, &semaphoreCreateInfo, 0, &frameData[i].renderSemaphore) != VK_SUCCESS)
-        {
-            return false;
-        }
+        res = vkCreateSemaphore(device.handle, &semaphoreCreateInfo, 0, &frameInfo.frameData[i].renderSemaphore);
+        if (res != VK_SUCCESS) return VkResultToVulkanError(res);
     }
 
-    return true;
+    return frameInfo;
 }
 
 void Acamarachi::Vulkan::FrameInformation::deinitialize(Acamarachi::Vulkan::Device &device)

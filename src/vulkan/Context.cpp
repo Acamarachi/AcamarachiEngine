@@ -2,9 +2,10 @@
 #include "Context.hpp"
 
 // TODO: Better error handling and reporting
-bool Acamarachi::Vulkan::Context::initialize(const char *appName, GetRequiredExtensions *getRequiredExtensions, void *window, CreateWindowSurfaceFunction *createWindowSurface)
+Acamarachi::Vulkan::Context::Error Acamarachi::Vulkan::Context::initialize(const char *appName, GetRequiredExtensions *getRequiredExtensions, void *window, CreateWindowSurfaceFunction *createWindowSurface)
 {
-
+    Acamarachi::Vulkan::Context context = {};
+    
     std::vector<const char *> instance_layers;
     std::vector<const char *> instance_extensions;
     std::vector<const char *> device_extensions = {VK_KHR_SWAPCHAIN_EXTENSION_NAME};
@@ -19,42 +20,32 @@ bool Acamarachi::Vulkan::Context::initialize(const char *appName, GetRequiredExt
         instance_extensions.push_back(glfw_required_extensions[i]);
     }
 
-    instance = Acamarachi::Vulkan::Instance();
-    if (!instance.initialize(appName, instance_extensions, instance_layers))
-    {
-        std::cerr << "Failed to create instance" << std::endl;
-        return false;
+    auto maybe_instance = Acamarachi::Vulkan::Instance::initialize(appName, instance_extensions, instance_layers) catch_err(maybe_instance) {
+        return maybe_instance.error();
     }
+    context.instance = maybe_instance.result();
 
-    surface = Acamarachi::Vulkan::Surface();
-    if (!surface.initialize(instance, window, createWindowSurface)) // reinterpret_cast<Acamarachi::Vulkan::CreateWindowSurfaceFunction *>(glfwCreateWindowSurface)))
-    {
-        std::cerr << "Failed to create surface" << std::endl;
-        return false;
+    auto maybe_surface = Acamarachi::Vulkan::Surface::initialize(context.instance, window, createWindowSurface) catch_err(maybe_surface) {
+        return maybe_surface.error();
     }
+    context.surface = maybe_surface.result();
 
-    device = Acamarachi::Vulkan::Device();
-    if (!device.initialize(instance, surface, device_extensions, instance_layers))
-    {
-        std::cerr << "Failed to create device" << std::endl;
-        return false;
+    auto maybe_device = Acamarachi::Vulkan::Device::initialize(context.instance, context.surface, device_extensions, instance_layers) catch_err(maybe_device) {
+        return maybe_device.error();
     }
+    context.device = maybe_device.result();
 
-    swapchain = Acamarachi::Vulkan::Swapchain();
-    if (!swapchain.initialize(device, surface, 1280, 720))
-    {
-        std::cerr << "Failed to create swapchain" << std::endl;
-        return false;
+    auto maybe_swapchain = Acamarachi::Vulkan::Swapchain::initialize(context.device, context.surface, 1280, 720) catch_err(maybe_swapchain) {
+        return maybe_swapchain.error();
     }
+    context.swapchain = maybe_swapchain.result();
 
-    frameInfo = Acamarachi::Vulkan::FrameInformation();
-    if (!frameInfo.initialize(device))
-    {
-        std::cerr << "Failed to create frame information" << std::endl;
-        return false;
+    auto maybe_frameInfo = Acamarachi::Vulkan::FrameInformation::initialize(context.device) catch_err(maybe_frameInfo) {
+        return maybe_frameInfo.error();
     }
+    context.frameInfo = maybe_frameInfo.result();
 
-    return true;
+    return context;
 }
 
 void Acamarachi::Vulkan::Context::deinitialize()

@@ -17,7 +17,8 @@ set(
 set(
   ACAMARACHi_VULKAN_SOURCES
 
-  ${CMAKE_SOURCE_DIR}/src/main.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Error.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/Error.cpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/Context.hpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/Context.cpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/Instance.cpp
@@ -30,10 +31,10 @@ set(
   ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.cpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.hpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.cpp
+  #${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.hpp
+  #${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.cpp
+  #${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.hpp
+  #${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.cpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.hpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.cpp
 )

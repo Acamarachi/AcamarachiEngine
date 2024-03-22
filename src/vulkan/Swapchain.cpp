@@ -4,68 +4,60 @@
 #include <algorithm>
 #include "Swapchain.hpp"
 
-bool Acamarachi::Vulkan::Swapchain::initialize(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, uint32_t width, uint32_t height)
+Acamarachi::Vulkan::Swapchain::Error Acamarachi::Vulkan::Swapchain::initialize(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, uint32_t width, uint32_t height)
 {
-    extent.width = width;
-    extent.height = height;
+    VkResult res = VK_SUCCESS;
+    Swapchain swapchain;
+    swapchain.extent.width = width;
+    swapchain.extent.height = height;
 
-    surfaceFormat.format = VK_FORMAT_B8G8R8A8_UNORM;
-    surfaceFormat.colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
-    if (!findSurfaceFormat(device, surface, &surfaceFormat))
-    {
-        return false;
-    }
+    swapchain.surfaceFormat.format = VK_FORMAT_B8G8R8A8_UNORM;
+    swapchain.surfaceFormat.colorSpace = VK_COLOR_SPACE_SRGB_NONLINEAR_KHR;
+    res = swapchain.findSurfaceFormat(device, surface, &swapchain.surfaceFormat);
+    if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
-    presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
-    if (!findPresentMode(device, surface, &presentMode))
-    {
-        return false;
-    }
+    swapchain.presentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+    res = swapchain.findPresentMode(device, surface, &swapchain.presentMode);
+    if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
-    findExtent(device);
-    uint32_t imageCount = findImageCount(device);
+    swapchain.findExtent(device);
+    uint32_t imageCount = swapchain.findImageCount(device);
 
     uint32_t queueFamilies[2] = {device.graphicQueue.familyIndex, device.presentQueue.familyIndex};
     VkSwapchainCreateInfoKHR swapchainCreateInfo = {};
     swapchainCreateInfo.sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR;
     swapchainCreateInfo.surface = surface.handle;
-    swapchainCreateInfo.imageColorSpace = surfaceFormat.colorSpace;
-    swapchainCreateInfo.imageFormat = surfaceFormat.format;
-    swapchainCreateInfo.imageExtent = extent;
+    swapchainCreateInfo.imageColorSpace = swapchain.surfaceFormat.colorSpace;
+    swapchainCreateInfo.imageFormat = swapchain.surfaceFormat.format;
+    swapchainCreateInfo.imageExtent = swapchain.extent;
     swapchainCreateInfo.imageArrayLayers = 1;
     swapchainCreateInfo.minImageCount = imageCount;
     swapchainCreateInfo.imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_TRANSFER_SRC_BIT;
-    swapchainCreateInfo.presentMode = presentMode;
+    swapchainCreateInfo.presentMode = swapchain.presentMode;
     swapchainCreateInfo.queueFamilyIndexCount = 2;
     swapchainCreateInfo.pQueueFamilyIndices = queueFamilies;
     swapchainCreateInfo.imageSharingMode = VK_SHARING_MODE_CONCURRENT;
     swapchainCreateInfo.preTransform = device.surfaceCapabilites.currentTransform;
     swapchainCreateInfo.compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR;
     swapchainCreateInfo.clipped = VK_TRUE;
-    swapchainCreateInfo.oldSwapchain = handle;
+    swapchainCreateInfo.oldSwapchain = swapchain.handle;
 
-    if (vkCreateSwapchainKHR(device.handle, &swapchainCreateInfo, 0, &handle) != VK_SUCCESS)
-    {
-        return false;
-    }
+    res = vkCreateSwapchainKHR(device.handle, &swapchainCreateInfo, 0, &swapchain.handle);
+    if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
     uint32_t actualImageCount = 0;
-    if (vkGetSwapchainImagesKHR(device.handle, handle, &actualImageCount, 0) != VK_SUCCESS)
-    {
-        return false;
-    }
+    res = vkGetSwapchainImagesKHR(device.handle, swapchain.handle, &actualImageCount, 0) ;
+    if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
-    images.resize(actualImageCount);
-    imageViews.resize(actualImageCount);
-    if (vkGetSwapchainImagesKHR(device.handle, handle, &actualImageCount, images.data()) != VK_SUCCESS)
-    {
-        return false;
-    }
+    swapchain.images.resize(actualImageCount);
+    swapchain.imageViews.resize(actualImageCount);
+    res = vkGetSwapchainImagesKHR(device.handle, swapchain.handle, &actualImageCount, swapchain.images.data());
+    if (res != VK_SUCCESS) return VkResultToVulkanError(res);
 
     VkImageViewCreateInfo imageViewCreateInfo = {};
     imageViewCreateInfo.sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO;
     imageViewCreateInfo.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    imageViewCreateInfo.format = surfaceFormat.format;
+    imageViewCreateInfo.format = swapchain.surfaceFormat.format;
     imageViewCreateInfo.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
     imageViewCreateInfo.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
     imageViewCreateInfo.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
@@ -77,13 +69,12 @@ bool Acamarachi::Vulkan::Swapchain::initialize(Acamarachi::Vulkan::Device& devic
     imageViewCreateInfo.subresourceRange.layerCount = 1;
     for (uint32_t i = 0; i < actualImageCount; i++)
     {
-        imageViewCreateInfo.image = images[i];
-        if (vkCreateImageView(device.handle, &imageViewCreateInfo, 0, &imageViews[i]) != VK_SUCCESS) {
-            return false;
-        }
+        imageViewCreateInfo.image = swapchain.images[i];
+        res = vkCreateImageView(device.handle, &imageViewCreateInfo, 0, &swapchain.imageViews[i]);
+        if (res != VK_SUCCESS) return VkResultToVulkanError(res);
     }
 
-    return true;
+    return swapchain;
 }
 
 void Acamarachi::Vulkan::Swapchain::deinitialize(Acamarachi::Vulkan::Device& device)
@@ -96,56 +87,51 @@ void Acamarachi::Vulkan::Swapchain::deinitialize(Acamarachi::Vulkan::Device& dev
     handle = VK_NULL_HANDLE;
 }
 
-bool Acamarachi::Vulkan::Swapchain::findSurfaceFormat(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, VkSurfaceFormatKHR *requested)
+VkResult Acamarachi::Vulkan::Swapchain::findSurfaceFormat(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, VkSurfaceFormatKHR *requested)
 {
+    VkResult res = VK_SUCCESS;
     uint32_t count = 0;
-    if (vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice, surface.handle, &count, 0) != VK_SUCCESS)
-    {
-        return false;
-    }
+    res = vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice, surface.handle, &count, 0);
+    if (res != VK_SUCCESS) return res;
 
     std::vector<VkSurfaceFormatKHR> formats = std::vector<VkSurfaceFormatKHR>(count);
-    if (vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice, surface.handle, &count, formats.data()) != VK_SUCCESS)
-    {
-        return false;
-    }
+    res = vkGetPhysicalDeviceSurfaceFormatsKHR(device.physicalDevice, surface.handle, &count, formats.data());
+    if (res != VK_SUCCESS) return res;
+
 
     for (std::size_t i = 0; i < formats.size(); i++)
     {
         VkSurfaceFormatKHR available = formats[i];
         if (available.format == (*requested).format && available.colorSpace == (*requested).colorSpace)
         {
-            return true;
+            return VK_SUCCESS;
         }
     }
     *requested = formats[0];
-    return true;
+    return VK_SUCCESS;
 }
 
-bool Acamarachi::Vulkan::Swapchain::findPresentMode(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, VkPresentModeKHR *requested)
+VkResult Acamarachi::Vulkan::Swapchain::findPresentMode(Acamarachi::Vulkan::Device& device, Acamarachi::Vulkan::Surface& surface, VkPresentModeKHR *requested)
 {
+    VkResult res = VK_SUCCESS;
     uint32_t count = 0;
-    if (vkGetPhysicalDeviceSurfacePresentModesKHR(device.physicalDevice, surface.handle, &count, 0) != VK_SUCCESS)
-    {
-        return false;
-    }
+    res = vkGetPhysicalDeviceSurfacePresentModesKHR(device.physicalDevice, surface.handle, &count, 0);
+    if (res != VK_SUCCESS) return res;
 
     std::vector<VkPresentModeKHR> modes = std::vector<VkPresentModeKHR>(count);
-    if (vkGetPhysicalDeviceSurfacePresentModesKHR(device.physicalDevice, surface.handle, &count, modes.data()) != VK_SUCCESS)
-    {
-        return false;
-    }
+    res = vkGetPhysicalDeviceSurfacePresentModesKHR(device.physicalDevice, surface.handle, &count, modes.data());
+    if (res != VK_SUCCESS) return res;
 
     for (std::size_t i = 0; i < count; i++)
     {
         if (modes[i] == *requested)
         {
-            return true;
+            return VK_SUCCESS;
         }
     }
     std::cout << "Trying to get present mode " << string_VkPresentModeKHR(*requested) << ", couldn't find it so falling back to VK_PRESENT_MODE_FIFO_KHR" << std::endl;
     *requested = VK_PRESENT_MODE_FIFO_KHR;
-    return false;
+    return VK_SUCCESS;
 }
 
 void Acamarachi::Vulkan::Swapchain::findExtent(Acamarachi::Vulkan::Device& device)

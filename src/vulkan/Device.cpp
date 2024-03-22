@@ -1,58 +1,58 @@
 #include <iostream>
 #include "Device.hpp"
 
-bool Acamarachi::Vulkan::Device::initialize(Acamarachi::Vulkan::Instance &instance, Acamarachi::Vulkan::Surface &surface, std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers)
+Acamarachi::Vulkan::Device::Error Acamarachi::Vulkan::Device::initialize(Acamarachi::Vulkan::Instance &instance, Acamarachi::Vulkan::Surface &surface, std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers)
 {
+    VkResult res = VK_SUCCESS;
+    Device device;
     std::vector<VkPhysicalDevice> physicalDevices;
 
     // Ask the instance for available physical devices
     if (!instance.getAvailablePhysicalDevices(physicalDevices))
     {
-        return false;
+        return Acamarachi::Vulkan::VulkanError::NO_PHYSICAL_DEVICE_FOUND;
     }
 
     // Loop over all the possible devices and take the first that satify the condition.
-    for (VkPhysicalDevice device : physicalDevices)
+    for (VkPhysicalDevice pDevice : physicalDevices)
     {
-        if (isPhysicalDeviceSuitable(device))
+        if (device.isPhysicalDeviceSuitable(pDevice))
         {
-            physicalDevice = device;
+            device.physicalDevice = pDevice;
             break;
         }
     }
 
-    if (physicalDevice == VK_NULL_HANDLE)
+    if (device.physicalDevice == VK_NULL_HANDLE)
     {
-        return false;
+        return Acamarachi::Vulkan::VulkanError::NO_PHYSICAL_DEVICE_FOUND;
     }
 
-    if (!updateSurfaceCapabilities(surface))
+    if ((res = device.updateSurfaceCapabilities(surface)) != VK_SUCCESS)
     {
-        std::cerr << "Failed to query physical device surface capabilities" << std::endl;
-        return false;
+        return VkResultToVulkanError(res);
     }
 
-    if (!findQueueFamilies(surface))
+    if (!device.findQueueFamilies(surface))
     {
-        std::cerr << "Failed to query physical device queues " << graphicQueue.familyIndex << ", " << presentQueue.familyIndex << ", " << transferQueue.familyIndex << ", " << std::endl;
-        return false;
+        return Acamarachi::Vulkan::VulkanError::FAILED_TO_FIND_UNIQUE_QUEUES;
     }
 
     float queuePriority = 1.0f;
     VkDeviceQueueCreateInfo queueCreateInfo[3] = {};
     queueCreateInfo[0].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueCreateInfo[0].queueCount = 1;
-    queueCreateInfo[0].queueFamilyIndex = graphicQueue.familyIndex;
+    queueCreateInfo[0].queueFamilyIndex = device.graphicQueue.familyIndex;
     queueCreateInfo[0].pQueuePriorities = &queuePriority;
 
     queueCreateInfo[1].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueCreateInfo[1].queueCount = 1;
-    queueCreateInfo[1].queueFamilyIndex = presentQueue.familyIndex;
+    queueCreateInfo[1].queueFamilyIndex = device.presentQueue.familyIndex;
     queueCreateInfo[1].pQueuePriorities = &queuePriority;
 
     queueCreateInfo[2].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
     queueCreateInfo[2].queueCount = 1;
-    queueCreateInfo[2].queueFamilyIndex = transferQueue.familyIndex;
+    queueCreateInfo[2].queueFamilyIndex = device.transferQueue.familyIndex;
     queueCreateInfo[2].pQueuePriorities = &queuePriority;
 
     VkPhysicalDeviceVulkan12Features featureVk1_2 = {};
@@ -79,19 +79,19 @@ bool Acamarachi::Vulkan::Device::initialize(Acamarachi::Vulkan::Instance &instan
     deviceCreateInfo.pQueueCreateInfos = queueCreateInfo;
     deviceCreateInfo.pEnabledFeatures = &features;
 
-    VkResult res = vkCreateDevice(physicalDevice, &deviceCreateInfo, 0, &this->handle);
+    res = vkCreateDevice(device.physicalDevice, &deviceCreateInfo, 0, &device.handle);
     if (res != VK_SUCCESS)
     {
-        return false;
+        return VkResultToVulkanError(res);
     }
 
-    vkGetDeviceQueue(handle, graphicQueue.familyIndex, 0, &graphicQueue.handle);
-    vkGetDeviceQueue(handle, presentQueue.familyIndex, 0, &presentQueue.handle);
-    vkGetDeviceQueue(handle, transferQueue.familyIndex, 0, &transferQueue.handle);
+    vkGetDeviceQueue(device.handle, device.graphicQueue.familyIndex, 0, &device.graphicQueue.handle);
+    vkGetDeviceQueue(device.handle, device.presentQueue.familyIndex, 0, &device.presentQueue.handle);
+    vkGetDeviceQueue(device.handle, device.transferQueue.familyIndex, 0, &device.transferQueue.handle);
     
-    vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
+    vkGetPhysicalDeviceMemoryProperties(device.physicalDevice, &device.memoryProperties);
 
-    return true;
+    return device;
 }
 
 void Acamarachi::Vulkan::Device::deinitialize()
@@ -111,9 +111,9 @@ bool Acamarachi::Vulkan::Device::isPhysicalDeviceSuitable(VkPhysicalDevice devic
     return deviceProperties.deviceType == VK_PHYSICAL_DEVICE_TYPE_DISCRETE_GPU;
 }
 
-bool Acamarachi::Vulkan::Device::updateSurfaceCapabilities(Acamarachi::Vulkan::Surface& surface)
+VkResult Acamarachi::Vulkan::Device::updateSurfaceCapabilities(Acamarachi::Vulkan::Surface& surface)
 {
-    return vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface.handle, &surfaceCapabilites) == VK_SUCCESS;
+    return vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, surface.handle, &surfaceCapabilites);
 }
 
 bool Acamarachi::Vulkan::Device::findQueueFamilies(Acamarachi::Vulkan::Surface& surface)

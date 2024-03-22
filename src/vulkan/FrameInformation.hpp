@@ -24,15 +24,16 @@ namespace Acamarachi::Vulkan
     class FrameInformation
     {
     public:
+        using Error = Core::Expected<FrameInformation, VulkanError>;
+
         FrameManagementData frameData[FRAME_BUFFERING];
         std::size_t currentFrame = 0;
 
         FrameInformation() = default;
-        FrameInformation(const FrameInformation &) = delete;
-
+        FrameInformation(const FrameInformation &) = default;
         ~FrameInformation() = default;
 
-        bool initialize(Device &device);
+        static Error initialize(Device &device);
         void deinitialize(Device &device);
 
         FrameManagementData getCurrentFrameData();

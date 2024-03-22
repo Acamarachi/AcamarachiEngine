@@ -1,10 +1,15 @@
 #include "Surface.hpp"
 #include <iostream>
 
-bool Acamarachi::Vulkan::Surface::initialize(Acamarachi::Vulkan::Instance& instance, void* window, CreateWindowSurfaceFunction* createWindowSurface)
+Acamarachi::Vulkan::Surface::Error Acamarachi::Vulkan::Surface::initialize(Acamarachi::Vulkan::Instance& instance, void* window, CreateWindowSurfaceFunction* createWindowSurface)
 {
-    std::cout << "Creating surface" << std::endl;
-    return createWindowSurface(instance.handle, window, 0, &handle) == VK_SUCCESS;
+    Surface surface;
+
+    const VkResult res = createWindowSurface(instance.handle, window, 0, &surface.handle);
+    if (res != VK_SUCCESS) {
+        return VkResultToVulkanError(res);
+    }
+    return surface;
 }
 
 void Acamarachi::Vulkan::Surface::deinitialize(Acamarachi::Vulkan::Instance& instance)

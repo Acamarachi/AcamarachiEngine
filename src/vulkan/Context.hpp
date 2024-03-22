@@ -3,6 +3,7 @@
 
 #include <vulkan/vulkan.h>
 
+#include "Error.hpp"
 #include "Instance.hpp"
 #include "Surface.hpp"
 #include "Device.hpp"
@@ -17,6 +18,8 @@ namespace Acamarachi::Vulkan
     class Context
     {
     public:
+        using Error = Core::Expected<Context, VulkanError>;
+
         Instance instance;
         Surface surface;
         Device device;
@@ -24,13 +27,11 @@ namespace Acamarachi::Vulkan
         FrameInformation frameInfo;
 
         Context() = default;
-        Context(const Context&) = delete;
-
+        Context(const Context&) = default;
         ~Context() = default;
 
-        bool initialize(const char *appName, GetRequiredExtensions* getRequiredExtensions, void* window, CreateWindowSurfaceFunction *createWindowSurface);
+        static Error initialize(const char *appName, GetRequiredExtensions* getRequiredExtensions, void* window, CreateWindowSurfaceFunction *createWindowSurface);
         void deinitialize();
-
     };
 }
 

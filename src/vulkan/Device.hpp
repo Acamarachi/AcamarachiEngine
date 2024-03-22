@@ -5,6 +5,7 @@
 #include <vector>
 #include <limits>
 
+#include "Error.hpp"
 #include "Instance.hpp"
 #include "Surface.hpp"
 
@@ -19,6 +20,8 @@ namespace Acamarachi::Vulkan
     class Device
     {
     public:
+        using Error = Core::Expected<Device, VulkanError>;
+
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
         VkDevice handle = VK_NULL_HANDLE;
         VkSurfaceCapabilitiesKHR surfaceCapabilites = {};
@@ -32,18 +35,17 @@ namespace Acamarachi::Vulkan
         // To create a device you need a working Vulkan instance, otherwise it will not work
         // as the devices a get through the instance
         Device() = default;
-
-        Device(const Device &) = delete;
+        Device(const Device &) = default;
         ~Device() = default;
 
         // Initialize the device and ask the instance to find some physical devices
         // then it will update physicalDevice and handle
-        bool initialize(Instance& instance, Surface& surface, std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers);
+        static Error initialize(Instance& instance, Surface& surface, std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers);
         void deinitialize();
 
         // Perform a check to see if the device is what we want
         bool isPhysicalDeviceSuitable(VkPhysicalDevice device);
-        bool updateSurfaceCapabilities(Acamarachi::Vulkan::Surface& surface);
+        VkResult updateSurfaceCapabilities(Acamarachi::Vulkan::Surface& surface);
 
     private:
         bool findQueueFamilies(Acamarachi::Vulkan::Surface& surface);
