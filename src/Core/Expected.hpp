@@ -2,6 +2,7 @@
 #define ACAMARACHI_CORE_EXPECTED 1
 
 #include <variant>
+#include "macros.hpp"
 
 namespace Acamarachi::Core
 {
