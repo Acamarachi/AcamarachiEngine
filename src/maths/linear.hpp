@@ -22,4 +22,12 @@ namespace Acamarachi::Maths
 	vec2 normalize(vec2 x);
 	vec3 normalize(vec3 x);
 	vec4 normalize(vec4 x);
+
+	mat2 inverse(mat2 m);
+	mat3 inverse(mat3 m);
+	mat4 inverse(mat4 m);
+
+	float determinant(mat2 m);
+	float determinant(mat3 m);
+	float determinant(mat4 m);
 }

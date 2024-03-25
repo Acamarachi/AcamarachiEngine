@@ -27,6 +27,10 @@ int main()
 
     glfwSetErrorCallback(error_callback);
 
+    mat4 m(vec4(1, 9, 3, 4), vec4(1,2,3,4), vec4(3,5,5,4), vec4(4,2,1,3));
+
+    std::cout << determinant(m) << std::endl;
+
     GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
     if (!window)
     {

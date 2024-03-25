@@ -1,6 +1,8 @@
 #include <cmath>
 #include "linear.hpp"
 
+#define UNUSED_PARAM(x)  (void)x
+
 namespace Acamarachi::Maths
 {
 	mat2 transpose(mat2 m)
@@ -75,6 +77,61 @@ namespace Acamarachi::Maths
 	vec4 normalize(vec4 x)
 	{
 		return x / length(x);
+	}
+
+	mat2 inverse(mat2 x)
+	{
+		UNUSED_PARAM(x);
+		return mat2();
+	}
+
+	mat3 inverse(mat3 x)
+	{
+		UNUSED_PARAM(x);
+		return mat3();
+	}
+
+	mat4 inverse(mat4 x)
+	{
+		UNUSED_PARAM(x);
+		return mat4();
+	}
+
+	float determinant(mat2 m)
+	{
+		return m[0][0]*m[1][1] - m[0][1]*m[1][0];
+	}
+
+	float determinant(mat3 m)
+	{
+		return m[0][0] * m[1][1] * m[2][2] + m[0][1] * m[1][2] * m[2][0] + m[0][2] * m[1][0] * m[2][1]
+			- m[0][2] * m[1][1] * m[2][0] - m[0][1] * m[1][0] * m[2][2] - m[0][0] * m[1][2] * m[2][1];
+	}
+
+	//https://semath.info/src/determinant-four-by-four.html
+	float determinant(mat4 m)
+	{
+		float det = 0.0f;
+
+		det = m[0][0] * (m[1][1] * (m[2][2] * m[3][3] - m[2][3] * m[3][2])
+			- m[1][2] * (m[2][1] * m[3][3] - m[2][3] * m[3][1])
+			+ m[1][3] * (m[2][1] * m[3][2] - m[2][2] * m[3][1]));
+
+		det -= m[0][1] * (m[1][0] * (m[2][2] * m[3][3] - m[2][3] * m[3][2])
+			- m[1][2] * (m[2][0] * m[3][3] - m[2][3] * m[3][0])
+			+ m[1][3] * (m[2][0] * m[3][2] - m[2][2] * m[3][0]));
+
+		det += m[0][2] * (m[1][0] * (m[2][1] * m[3][3] - m[2][3] * m[3][1])
+			- m[1][1] * (m[2][0] * m[3][3] - m[2][3] * m[3][0])
+			+ m[1][3] * (m[2][0] * m[3][1] - m[2][1] * m[3][0]));
+
+		det -= m[0][3] * (m[1][0] * (m[2][1] * m[3][2] - m[2][2] * m[3][1])
+			- m[1][1] * (m[2][0] * m[3][2] - m[2][2] * m[3][0])
+			+ m[1][2] * (m[2][0] * m[3][1] - m[2][1] * m[3][0]));
+
+
+
+		return det;
 	}
 
 }
