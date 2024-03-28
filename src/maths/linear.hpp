@@ -37,6 +37,10 @@ namespace Acamarachi::Maths
 	mat3 operator*(float a, mat3 m);
 	mat4 operator*(float a, mat4 m);
 
+	void operator*=(mat2& m, float a);
+	void operator*=(mat3& m, float a);
+	void operator*=(mat4& m, float a);
+
 	//vector matrix multiplication
 	vec2 operator*(mat2 m, vec2 v);
 	vec3 operator*(mat3 m, vec3 v);

@@ -133,6 +133,8 @@ namespace Acamarachi::Maths
 		return det;
 	}
 
+
+	//scalar multiplication
 	mat2 operator*(float a, mat2 m)
 	{
 		return mat2( m[0] * a,m[1] * a );
@@ -148,8 +150,23 @@ namespace Acamarachi::Maths
 		return mat4(m[0] * a, m[1] * a, m[2] * a, m[3] * a);
 	}
 
+	void operator*=(mat2& m, float a)
+	{
+		m = a * m;
+	}
+
+	void operator*=(mat3& m, float a)
+	{
+		m = a * m;
+	}
+
+	void operator*=(mat4& m, float a)
+	{
+		m = a * m;
+	}
 
 
+	//vector matrix multiplication
 	vec2 operator*(mat2 m, vec2 v)
 	{
 		return vec2(dot(m[0], v), dot(m[1], v));
@@ -165,7 +182,7 @@ namespace Acamarachi::Maths
 	}
 
 
-
+	//vector matrix multiplication
 	mat2 operator*(mat2 a, mat2 b)
 	{
 		b = transpose(b);
