@@ -1,5 +1,4 @@
-#ifndef ACAMARACHI_CORE_EXPECTED
-#define ACAMARACHI_CORE_EXPECTED 1
+#pragma once
 
 #include <variant>
 
@@ -37,6 +36,6 @@ namespace Acamarachi::Core
 
     #define catch_err(expected) ;           \
         if (!expected)
-}
 
-#endif
+    #define log_err(error)  std::cerr << "Error: " << __FILE__ ":" << __LINE__ << " with error code " << (int)error << std::endl
+}
