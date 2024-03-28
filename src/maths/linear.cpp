@@ -81,7 +81,8 @@ namespace Acamarachi::Maths
 
 	mat2 inverse(mat2 x)
 	{
-		UNUSED_PARAM(x);
+		float inverseDet = 1.0f / determinant(x);
+		UNUSED_PARAM(inverseDet);
 		return mat2();
 	}
 
@@ -129,9 +130,71 @@ namespace Acamarachi::Maths
 			- m[1][1] * (m[2][0] * m[3][2] - m[2][2] * m[3][0])
 			+ m[1][2] * (m[2][0] * m[3][1] - m[2][1] * m[3][0]));
 
-
-
 		return det;
+	}
+
+	mat2 operator*(float a, mat2 m)
+	{
+		return mat2( m[0] * a,m[1] * a );
+	}
+
+	mat3 operator*(float a, mat3 m)
+	{
+		return mat3(m[0] * a, m[1] * a, m[2] * a);
+	}
+
+	mat4 operator*(float a, mat4 m)
+	{
+		return mat4(m[0] * a, m[1] * a, m[2] * a, m[3] * a);
+	}
+
+
+
+	vec2 operator*(mat2 m, vec2 v)
+	{
+		return vec2(dot(m[0], v), dot(m[1], v));
+	}
+	vec3 operator*(mat3 m, vec3 v)
+	{
+		return vec3(dot(m[0], v), dot(m[1], v), dot(m[2], v));
+	}
+
+	vec4 operator*(mat4 m, vec4 v)
+	{
+		return vec4(dot(m[0], v), dot(m[1], v), dot(m[2], v), dot(m[3], v));
+	}
+
+
+
+	mat2 operator*(mat2 a, mat2 b)
+	{
+		b = transpose(b);
+
+		return {
+					{dot(a[0],b[0]) , dot(a[0],b[1])},
+					{dot(a[1],b[0]) , dot(a[1],b[1])}
+		};
+	}
+
+	mat3 operator*(mat3 a, mat3 b)
+	{
+		b = transpose(b);
+		return {
+					{dot(a[0],b[0]) , dot(a[0],b[1]) , dot(a[0],b[2])},
+					{dot(a[1],b[0]) , dot(a[1],b[1]) , dot(a[1],b[2])},
+					{dot(a[2],b[0]) , dot(a[2],b[1]) , dot(a[2],b[2])}
+		};
+	}
+
+	mat4 operator*(mat4 a, mat4 b)
+	{
+		b = transpose(b);
+		return {
+					{dot(a[0],b[0]) , dot(a[0],b[1]) , dot(a[0],b[2]) , dot(a[0],b[3])},
+					{dot(a[1],b[0]) , dot(a[1],b[1]) , dot(a[1],b[2]) , dot(a[1],b[3])},
+					{dot(a[2],b[0]) , dot(a[2],b[1]) , dot(a[2],b[2]) , dot(a[2],b[3])},
+					{dot(a[3],b[0]) , dot(a[3],b[1]) , dot(a[3],b[2]) , dot(a[3],b[3])}
+		};
 	}
 
 }

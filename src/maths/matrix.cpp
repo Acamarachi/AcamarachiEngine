@@ -7,45 +7,33 @@ namespace Acamarachi::Maths
 	//operator +=
 	void operator+=(mat2& a, mat2 o)
 	{
-		a[0] += o[0];
-		a[1] += o[1];
+		a = a + o;
 	}
 
 	void operator+=(mat3& a, mat3 o)
 	{
-		a[0] += o[0];
-		a[1] += o[1];
-		a[2] += o[2];
+		a = a + o;
 	}
 
 	void operator+=(mat4& a, mat4 o)
 	{
-		a[0] += o[0];
-		a[1] += o[1];
-		a[2] += o[2];
-		a[3] += o[3];
+		a = a + o;
 	}
 
 	//operator +=
 	void operator+=(mat2& a, float o)
 	{
-		a[0] += o;
-		a[1] += o;
+		a = a + o;
 	}
 
 	void operator+=(mat3& a, float o)
 	{
-		a[0] += o;
-		a[1] += o;
-		a[2] += o;
+		a = a + o;
 	}
 
 	void operator+=(mat4& a, float o)
 	{
-		a[0] += o;
-		a[1] += o;
-		a[2] += o;
-		a[3] += o;
+		a = a + o;
 	}
 
 	//matrix + matrix
@@ -86,45 +74,33 @@ namespace Acamarachi::Maths
 	//operator -=
 	void operator-=(mat2& a, mat2 o)
 	{
-		a[0] -= o[0];
-		a[1] -= o[1];
+		a = a - o;
 	}
 
 	void operator-=(mat3& a, mat3 o)
 	{
-		a[0] -= o[0];
-		a[1] -= o[1];
-		a[2] -= o[2];
+		a = a - o;
 	}
 
 	void operator-=(mat4& a, mat4 o)
 	{
-		a[0] -= o[0];
-		a[1] -= o[1];
-		a[2] -= o[2];
-		a[3] -= o[3];
+		a = a - o;
 	}
 
 	//operator -=
 	void operator-=(mat2& a, float o)
 	{
-		a[0] -= o;
-		a[1] -= o;
+		a = a - o;
 	}
 
 	void operator-=(mat3& a, float o)
 	{
-		a[0] -= o;
-		a[1] -= o;
-		a[2] -= o;
+		a = a - o;
 	}
 
 	void operator-=(mat4& a, float o)
 	{
-		a[0] -= o;
-		a[1] -= o;
-		a[2] -= o;
-		a[3] -= o;
+		a = a - o;
 	}
 
 	//matrix - matrix

@@ -30,4 +30,20 @@ namespace Acamarachi::Maths
 	float determinant(mat2 m);
 	float determinant(mat3 m);
 	float determinant(mat4 m);
+
+	//matrix operation 
+	//scalar multiplication
+	mat2 operator*(float a, mat2 m);
+	mat3 operator*(float a, mat3 m);
+	mat4 operator*(float a, mat4 m);
+
+	//vector matrix multiplication
+	vec2 operator*(mat2 m, vec2 v);
+	vec3 operator*(mat3 m, vec3 v);
+	vec4 operator*(mat4 m, vec4 v);
+
+	//vector matrix multiplication
+	mat2 operator*(mat2 a, mat2 b);
+	mat3 operator*(mat3 a, mat3 b);
+	mat4 operator*(mat4 a, mat4 b);
 }
