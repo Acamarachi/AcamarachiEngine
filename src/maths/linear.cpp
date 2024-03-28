@@ -82,21 +82,56 @@ namespace Acamarachi::Maths
 	mat2 inverse(mat2 x)
 	{
 		float inverseDet = 1.0f / determinant(x);
-		UNUSED_PARAM(inverseDet);
-		return mat2();
+		mat2 m = { {x[1][1],-x[0][1]},{-x[1][0],x[0][0]} };
+
+		return inverseDet * m;
 	}
 
-	mat3 inverse(mat3 x)
+	mat3 inverse(mat3 m)
 	{
-		UNUSED_PARAM(x);
-		return mat3();
+		float inverseDet = 1.0f / determinant(m);
+
+		float a = inverseDet * (m[1][1] * m[2][2] - m[1][2] * m[2][1]);
+		float b = inverseDet * -(m[0][1] * m[2][2] - m[0][2] * m[2][1]);
+		float c = inverseDet * (m[0][1] * m[1][2] - m[0][2] * m[1][1]);
+		
+		vec3 x(a, b, c);
+
+		a = inverseDet * -(m[1][0] * m[2][2] - m[1][2] * m[2][0]);
+		b = inverseDet * (m[0][0] * m[2][2] - m[0][2] * m[2][0]);
+		c = inverseDet * -(m[0][0] * m[1][2] - m[0][2] * m[1][0]);
+
+		vec3 y(a, b, c);
+
+		a = inverseDet * (m[1][0] * m[2][1] - m[1][1] * m[2][0]);
+		b = inverseDet * -(m[0][0] * m[2][1] - m[0][1] * m[2][0]);
+		c = inverseDet * (m[0][0] * m[1][1] - m[0][1] * m[1][0]);
+
+		vec3 z(a, b, c);
+
+		return mat3(x,y,z);
 	}
 
-	mat4 inverse(mat4 x)
-	{
-		UNUSED_PARAM(x);
-		return mat4();
-	}
+	//mat4 inverse(mat4 m)
+	//{
+	//	float inverseDet = 1.0f / determinant(m);
+	//	m00 = inverseDet * (m.m11 * A2323 - m.m12 * A1323 + m.m13 * A1223),
+	//	m01 = inverseDet * -(m.m01 * A2323 - m.m02 * A1323 + m.m03 * A1223),
+	//	m02 = inverseDet * (m.m01 * A2313 - m.m02 * A1313 + m.m03 * A1213),
+	//	m03 = inverseDet * -(m.m01 * A2312 - m.m02 * A1312 + m.m03 * A1212),
+	//	m10 = inverseDet * -(m.m10 * A2323 - m.m12 * A0323 + m.m13 * A0223),
+	//	m11 = inverseDet * (m.m00 * A2323 - m.m02 * A0323 + m.m03 * A0223),
+	//	m12 = inverseDet * -(m.m00 * A2313 - m.m02 * A0313 + m.m03 * A0213),
+	//	m13 = inverseDet * (m.m00 * A2312 - m.m02 * A0312 + m.m03 * A0212),
+	//	m20 = inverseDet * (m.m10 * A1323 - m.m11 * A0323 + m.m13 * A0123),
+	//	m21 = inverseDet * -(m.m00 * A1323 - m.m01 * A0323 + m.m03 * A0123),
+	//	m22 = inverseDet * (m.m00 * A1313 - m.m01 * A0313 + m.m03 * A0113),
+	//	m23 = inverseDet * -(m.m00 * A1312 - m.m01 * A0312 + m.m03 * A0112),
+	//	m30 = inverseDet * -(m.m10 * A1223 - m.m11 * A0223 + m.m12 * A0123),
+	//	m31 = inverseDet * (m.m00 * A1223 - m.m01 * A0223 + m.m02 * A0123),
+	//	m32 = inverseDet * -(m.m00 * A1213 - m.m01 * A0213 + m.m02 * A0113),
+	//	m33 = inverseDet * (m.m00 * A1212 - m.m01 * A0212 + m.m02 * A0112),
+	//}
 
 	float determinant(mat2 m)
 	{
