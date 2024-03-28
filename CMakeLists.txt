@@ -31,12 +31,14 @@ set(
   ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.cpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.hpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.cpp
-  #${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.hpp
-  #${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipeline.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.hpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.cpp
   #${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.hpp
   #${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.cpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.hpp
   ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.cpp
+  ${CMAKE_SOURCE_DIR}/src/vulkan/ShaderModule.hpp
 )
 
 add_executable(${PROJECT_NAME})
