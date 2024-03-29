@@ -9,9 +9,34 @@ if(POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-add_executable(
-    ${PROJECT_NAME} 
-    src/main.cpp src/maths/vector.hpp src/maths/matrix.hpp src/maths/linear.hpp src/maths/linear.cpp src/maths/vector.cpp "src/maths/matrix.cpp")
+set(
+  ACAMARACHi_CORE_SOURCES
+  ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
+)
+
+set(
+  ACAMARACHi_MATHS_SOURCES
+  ${CMAKE_SOURCE_DIR}/src/maths/vector.hpp
+  ${CMAKE_SOURCE_DIR}/src/maths/matrix.hpp
+  ${CMAKE_SOURCE_DIR}/src/maths/linear.hpp 
+  ${CMAKE_SOURCE_DIR}/src/maths/linear.cpp 
+  ${CMAKE_SOURCE_DIR}/src/maths/vector.cpp 
+  ${CMAKE_SOURCE_DIR}/src/maths/matrix.cpp
+)
+
+add_executable(${PROJECT_NAME})
+target_sources(
+  ${PROJECT_NAME}
+  PRIVATE
+
+  ${CMAKE_SOURCE_DIR}/src/main.cpp
+  ${CMAKE_SOURCE_DIR}/src/types.h
+  ${CMAKE_SOURCE_DIR}/src/platform.h
+  ${CMAKE_SOURCE_DIR}/src/config.h
+  ${CMAKE_SOURCE_DIR}/src/macros.h
+  ${ACAMARACHi_CORE_SOURCES}
+  ${ACAMARACHi_MATHS_SOURCES}
+)
 
 #add build property
 set_target_properties(${PROJECT_NAME} PROPERTIES
