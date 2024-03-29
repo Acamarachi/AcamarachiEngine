@@ -14,6 +14,16 @@ set(
   ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
 )
 
+set(
+  ACAMARACHi_MATHS_SOURCES
+  ${CMAKE_SOURCE_DIR}/src/maths/vector.hpp
+  ${CMAKE_SOURCE_DIR}/src/maths/matrix.hpp
+  ${CMAKE_SOURCE_DIR}/src/maths/linear.hpp 
+  ${CMAKE_SOURCE_DIR}/src/maths/linear.cpp 
+  ${CMAKE_SOURCE_DIR}/src/maths/vector.cpp 
+  ${CMAKE_SOURCE_DIR}/src/maths/matrix.cpp
+)
+
 add_executable(${PROJECT_NAME})
 target_sources(
   ${PROJECT_NAME}
@@ -25,6 +35,7 @@ target_sources(
   ${CMAKE_SOURCE_DIR}/src/config.h
   ${CMAKE_SOURCE_DIR}/src/macros.h
   ${ACAMARACHi_CORE_SOURCES}
+  ${ACAMARACHi_MATHS_SOURCES}
 )
 
 #add build property
