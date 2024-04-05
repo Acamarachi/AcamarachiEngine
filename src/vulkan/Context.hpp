@@ -17,15 +17,13 @@ namespace Acamarachi::Vulkan
 
     class Context
     {
-    private:
+    public:
         Instance instance;
         Surface surface;
         Device device;
         Swapchain swapchain;
         FrameInformation frameInfo;
 
-
-    public:
         using Error = Core::Expected<Context, VulkanError>;
 
         Context() = default;

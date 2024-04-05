@@ -57,7 +57,7 @@ void Acamarachi::Vulkan::FrameInformation::deinitialize(Acamarachi::Vulkan::Devi
 
 Acamarachi::Vulkan::FrameManagementData Acamarachi::Vulkan::FrameInformation::getCurrentFrameData()
 {
-    return frameData[currentFrame % FRAME_BUFFERING];
+    return frameData[currentFrameIndex % FRAME_BUFFERING];
 }
 
 bool Acamarachi::Vulkan::FrameInformation::draw(Acamarachi::Vulkan::Device &device, Acamarachi::Vulkan::Swapchain& swapchain)

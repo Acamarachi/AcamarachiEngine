@@ -1,4 +1,5 @@
 #include "GraphicPipelineBuilder.hpp"
+#include "../macros.h"
 
 Acamarachi::Vulkan::GraphicPipelineBuilder::GraphicPipelineBuilder()
 {
@@ -40,6 +41,7 @@ void Acamarachi::Vulkan::GraphicPipelineBuilder::clear()
 
 VkPipeline Acamarachi::Vulkan::GraphicPipelineBuilder::build(Device &device)
 {
+    UNUSED_PARAM(device);
     viewportState.scissorCount = 1;
     viewportState.viewportCount = 1;
     

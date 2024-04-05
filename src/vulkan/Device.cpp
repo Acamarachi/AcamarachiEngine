@@ -71,9 +71,9 @@ Acamarachi::Vulkan::Device::Error Acamarachi::Vulkan::Device::initialize(Acamara
     VkDeviceCreateInfo deviceCreateInfo = {};
     deviceCreateInfo.sType = VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO;
     deviceCreateInfo.pNext = &featureVk1_3;
-    deviceCreateInfo.enabledExtensionCount = requiredExtensions.size();
+    deviceCreateInfo.enabledExtensionCount = (uint32_t)requiredExtensions.size();
     deviceCreateInfo.ppEnabledExtensionNames = requiredExtensions.data();
-    deviceCreateInfo.enabledLayerCount = requiredValidationLayers.size();
+    deviceCreateInfo.enabledLayerCount = (uint32_t)requiredValidationLayers.size();
     deviceCreateInfo.ppEnabledLayerNames = requiredValidationLayers.data();
     deviceCreateInfo.queueCreateInfoCount = 3;
     deviceCreateInfo.pQueueCreateInfos = queueCreateInfo;
