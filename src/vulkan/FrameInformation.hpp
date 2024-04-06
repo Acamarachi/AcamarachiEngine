@@ -16,7 +16,7 @@ namespace Acamarachi::Vulkan
         VkCommandPool commandPool = VK_NULL_HANDLE;
         VkCommandBuffer primaryCommandBuffer = VK_NULL_HANDLE;
 
-        VkFence renderFence;
+        VkFence renderFence = VK_NULL_HANDLE;
         VkSemaphore swapchainSemaphore;
         VkSemaphore renderSemaphore;
     } FrameManagementData;

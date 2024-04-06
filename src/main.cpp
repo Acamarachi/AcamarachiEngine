@@ -39,10 +39,8 @@ int main()
     glfwSetKeyCallback(window, key_callback);
 
     Acamarachi::Vulkan::Context context = Acamarachi::Vulkan::Context();
-    if (!context.initialize("Test", reinterpret_cast<Acamarachi::Vulkan::GetRequiredExtensions *>(glfwGetRequiredInstanceExtensions), window, reinterpret_cast<Acamarachi::Vulkan::CreateWindowSurfaceFunction *>(glfwCreateWindowSurface)))
-    {
-        return 1;
-    }
+    context.initialize("Test", reinterpret_cast<Acamarachi::Vulkan::GetRequiredExtensions*>(glfwGetRequiredInstanceExtensions), window, reinterpret_cast<Acamarachi::Vulkan::CreateWindowSurfaceFunction*>(glfwCreateWindowSurface));
+
 
     while (!glfwWindowShouldClose(window))
     {

@@ -30,7 +30,7 @@ namespace Acamarachi::Vulkan
         Context(const Context&) = default;
         ~Context() = default;
 
-        static Error initialize(const char *appName, GetRequiredExtensions* getRequiredExtensions, void* window, CreateWindowSurfaceFunction *createWindowSurface);
+        void initialize(const char *appName, GetRequiredExtensions* getRequiredExtensions, void* window, CreateWindowSurfaceFunction *createWindowSurface);
         void deinitialize();
     };
 }
