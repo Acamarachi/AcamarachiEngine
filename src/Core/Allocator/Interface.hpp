@@ -4,7 +4,7 @@
 #include "../Error.hpp"
 #include "../Slice.hpp"
 
-namespace Acamarachi::Core
+namespace Acamarachi::Core::Allocator
 {
     size_t align(size_t x, size_t alignment);
 
@@ -38,6 +38,18 @@ namespace Acamarachi::Core
             return vtable.alloc(typeErasedAllocator, size, 16);
         }
 
+        ErrorOr<void *> calloc(size_t size)
+        {
+            auto maybe_mem = vtable.alloc(typeErasedAllocator, size, 16);
+            if (!maybe_mem) {
+                return maybe_mem.error();
+            }
+
+            void *mem = maybe_mem.result();
+            memset(mem, 0, size);
+            return mem;
+        }
+
         ErrorOr<void *> allocAlignment(size_t size, size_t alignment)
         {
             return vtable.alloc(typeErasedAllocator, size, alignment);
@@ -52,6 +64,18 @@ namespace Acamarachi::Core
             }
 
             return Acamarachi::Core::Slice((T *)maybe_memory.result(), size);
+        }
+
+        template<typename T>
+        ErrorOr<Slice<T>> callocSlice(size_t size, size_t alignment)
+        {
+            auto maybe_memory = vtable.alloc(typeErasedAllocator, sizeof(T) * size, alignment);
+            if (!maybe_memory) {
+                return maybe_memory.error();
+            }
+            void *mem = maybe_memory.result();
+            memset(mem, 0, sizeof(T) * size);
+            return Acamarachi::Core::Slice((T *)mem, size);
         }
 
         ErrorOr<void *> realloc(void* old_ptr, size_t size)
