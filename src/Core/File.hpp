@@ -1,7 +1,7 @@
 #pragma once
 
-#include <string>
 #include <fcntl.h>
+#include <string>
 #include "Allocator/Interface.hpp"
 #include "Slice.hpp"
 #include "Error.hpp"
@@ -35,12 +35,13 @@ namespace Acamarachi::Core
             return *this;
         }
 
-        static ErrorOr<File> openFile(const char *, OpenMode);
-        static ErrorOr<File> openFile(const std::string &, OpenMode);
+        static ErrorOr<File> open(const char *, OpenMode);
+        static ErrorOr<File> open(const std::string &, OpenMode);
 
-        ErrorOr<ssize_t> readN(const char *, size_t n);
-        ErrorOr<ssize_t> readN(Slice<char> &);
-        ErrorOr<Slice<char>> readAll(AllocatorInterface);
+        ErrorOr<ssize_t> read(char *, size_t n);
+        ErrorOr<ssize_t> read(Slice<char> &);
+        ErrorOr<Slice<char>> readAll(Allocator::Interface);
+
 
         ErrorOr<_off_t> getFileSize();
         _off_t fileSize() const { return size; }

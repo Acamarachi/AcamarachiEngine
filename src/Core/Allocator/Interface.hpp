@@ -18,14 +18,14 @@ namespace Acamarachi::Core::Allocator
         FreeFunction free = nullptr;
     };
 
-    class AllocatorInterface
+    class Interface
     {
     private:
         void *typeErasedAllocator = nullptr;
         AllocatorVirtualTable vtable;
 
     public:
-        AllocatorInterface(void *allocator, AllocFunction allocFn, ReallocFunction reallocFn, FreeFunction freeFn)
+        Interface(void *allocator, AllocFunction allocFn, ReallocFunction reallocFn, FreeFunction freeFn)
         {
             typeErasedAllocator = allocator;
             vtable.alloc = allocFn;
@@ -110,12 +110,12 @@ namespace Acamarachi::Core::Allocator
             vtable.free(typeErasedAllocator, (void *)slice.ptr);
             slice = std::move(Slice<T>());
         }
-
-        static AllocatorInterface getCAllocatorInterface();
-
-        static size_t getCAllocatorTotalBytesUsage();
-        static size_t getCAllocatorCurrentBytesUsage();
-        static size_t getCAllocatorAllocationCount() ;
-        static size_t getCAllocatorFreeCount();
     };
+
+    Interface getCAllocatorInterface();
+
+    size_t getCAllocatorTotalBytesUsage();
+    size_t getCAllocatorCurrentBytesUsage();
+    size_t getCAllocatorAllocationCount() ;
+    size_t getCAllocatorFreeCount();
 }
