@@ -1,6 +1,10 @@
 #pragma once
 
+#ifdef _MSC_VER
+#include "MSVC/unistd.h"
+#else
 #include <unistd.h>
+#endif
 #include <iterator>
 #include <cstddef>
 #include <assert.h>
