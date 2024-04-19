@@ -1,0 +1,12 @@
+list(
+    APPEND
+    ACAMARACHi_CORE_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
+    ${CMAKE_SOURCE_DIR}/src/Core/Slice.hpp
+    ${CMAKE_SOURCE_DIR}/src/Core/File.hpp
+    ${CMAKE_SOURCE_DIR}/src/Core/File.cpp
+    ${CMAKE_SOURCE_DIR}/src/Core/Error.hpp
+    ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.hpp
+    ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.cpp
+    ${CMAKE_SOURCE_DIR}/src/Core/MSVC/unistd.h
+)

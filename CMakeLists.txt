@@ -9,10 +9,9 @@ if(POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-set(
-  ACAMARACHi_CORE_SOURCES
-  ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
-)
+# Define Core sources list
+set(ACAMARACHi_CORE_SOURCES)
+add_subdirectory(src/Core)
 
 set(
   ACAMARACHi_MATHS_SOURCES
