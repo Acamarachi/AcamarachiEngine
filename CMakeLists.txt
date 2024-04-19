@@ -23,8 +23,7 @@ target_sources(
   ${CMAKE_SOURCE_DIR}/src/platform.h
   ${CMAKE_SOURCE_DIR}/src/config.h
   ${CMAKE_SOURCE_DIR}/src/macros.h
-  ${ACAMARACHi_CORE_SOURCES}
- "src/Core/MSVC/unistd.h")
+  ${ACAMARACHi_CORE_SOURCES})
 
 #add build property
 set_target_properties(${PROJECT_NAME} PROPERTIES
