@@ -10,7 +10,17 @@ if(POLICY CMP0141)
 endif()
 
 # Define Core sources list
-set(ACAMARACHi_CORE_SOURCES)
+set(
+  ACAMARACHi_CORE_SOURCES
+  ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Slice.hpp
+  # ${CMAKE_SOURCE_DIR}/src/Core/File.hpp
+  # ${CMAKE_SOURCE_DIR}/src/Core/File.cpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Error.hpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.hpp
+  ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.cpp
+  ${CMAKE_SOURCE_DIR}/src/Core/MSVC/unistd.h
+)
 add_subdirectory(src/Core)
 
 set(
@@ -22,6 +32,8 @@ set(
   ${CMAKE_SOURCE_DIR}/src/maths/vector.cpp 
   ${CMAKE_SOURCE_DIR}/src/maths/matrix.cpp
 )
+
+message("Core sources: ${ACAMARACHi_CORE_SOURCES}")
 
 add_executable(${PROJECT_NAME})
 target_sources(

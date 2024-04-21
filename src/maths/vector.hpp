@@ -13,6 +13,8 @@ namespace Acamarachi::Maths
 		vec2(vec2& o) : data{ o.data[0], o.data[1] } {};
 		vec2(const vec2& o) : data{ o.data[0], o.data[1] } {};
 
+		constexpr vec2& operator=(const vec2&) = default;
+
 		//getter with with litteral
 		constexpr float x() const { return data[0]; }
 		constexpr float y() const { return data[1]; }
@@ -45,6 +47,8 @@ namespace Acamarachi::Maths
 		vec3() : data{ 0.0f,0.0f,0.0f } {}
 		vec3(vec3& o) : data{ o.data[0],o.data[1],o.data[2] } {}
 		vec3(const vec3& o) : data{ o.data[0],o.data[1],o.data[2] } {}
+
+		constexpr vec3& operator=(const vec3&) = default;
 
 		//vec2 to vec3
 		vec3(vec2& o, float z) : data{ o.data[0], o.data[1], z } {}
@@ -93,6 +97,8 @@ namespace Acamarachi::Maths
 		//Vec3 to vec4
 		vec4(vec3& o, float w) : data{ o.data[0],o.data[1],o.data[2], w } {}
 		vec4(float x, vec3& o) : data{ x ,o.data[0],o.data[1],o.data[2] } {}
+
+		constexpr vec4& operator=(const vec4&) = default;
 
 		constexpr float x() const { return data[0]; }
 		constexpr float y() const { return data[1]; }
@@ -160,7 +166,6 @@ namespace Acamarachi::Maths
 	vec4 operator-(vec4 a, vec4 o);
 
 	//Vector - float
-
 	vec2 operator-(vec2 a, float o);
 	vec3 operator-(vec3 a, float o);
 	vec4 operator-(vec4 a, float o);
@@ -183,7 +188,6 @@ namespace Acamarachi::Maths
 	vec4 operator*(vec4 a, vec4 o);
 
 	//Vector * float
-
 	vec2 operator*(vec2 a, float o);
 	vec3 operator*(vec3 a, float o);
 	vec4 operator*(vec4 a, float o);
@@ -206,7 +210,6 @@ namespace Acamarachi::Maths
 	vec4 operator/(vec4 a, vec4 o);
 
 	//Vector / float
-
 	vec2 operator/(vec2 a, float o);
 	vec3 operator/(vec3 a, float o);
 	vec4 operator/(vec4 a, float o);

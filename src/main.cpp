@@ -1,7 +1,7 @@
-#pragma once
 #include <iostream>
 #include <GLFW/glfw3.h>
-#include "Core/File.hpp"
+#include "Core/Allocator/Interface.hpp"
+#include "Core/Slice.hpp"
 #include "maths/linear.hpp"
 
 using namespace Acamarachi::Maths;
@@ -39,6 +39,7 @@ int main()
     a = vec2(2.0f, 6.0f);
     mat2 m2 = { {1.0,2.0},{3.0,1.0} };
     mat2 b2 = { {2.0,1.0},{6.0,1.0} };
+    (void)b2;
 
     std::cout << a[0] << " " << a[1] << std::endl;
     a = m2 * a;
@@ -57,7 +58,6 @@ int main()
     std::cout << m3[0][0] << " " << m3[0][1] << " " << m3[0][2] << std::endl;
     std::cout << m3[1][0] << " " << m3[1][1] << " " << m3[1][2] << std::endl;
     std::cout << m3[2][0] << " " << m3[2][1] << " " << m3[2][2] << std::endl;
-
 
     GLFWwindow* window = glfwCreateWindow(640, 480, "My Title", NULL, NULL);
     if (!window)

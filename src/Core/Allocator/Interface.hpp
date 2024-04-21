@@ -6,6 +6,8 @@
 #include <unistd.h>
 #endif
 
+#include "../Slice.hpp"
+
 namespace Acamarachi::Core::Allocator
 {
     enum class Result
@@ -45,82 +47,86 @@ namespace Acamarachi::Core::Allocator
             vtable.free = freeFn;
         }
 
-        Result alloc(size_t size, void **ptr_out)
+        Result alloc(size_t size, void **ptrOut)
         {
-            return vtable.alloc(typeErasedAllocator, size, 16, ptr_out);
+            return vtable.alloc(typeErasedAllocator, size, 16, ptrOut);
         }
 
-        Result calloc(size_t size, void **ptr_out)
+        Result calloc(size_t size, void **ptrOut)
         {
-            const Result res = vtable.alloc(typeErasedAllocator, size, 16, ptr_out);
+            const Result res = vtable.alloc(typeErasedAllocator, size, 16, ptrOut);
             if (res != Result::Success)
                 return res;
 
-            memset(*ptr_out, 0, size);
+            memset(*ptrOut, 0, size);
             return Result::Success;
         }
 
-        Result allocAlignment(size_t size, size_t alignment, void **ptr_out)
+        Result allocAlignment(size_t size, size_t alignment, void **ptrOut)
         {
-            return vtable.alloc(typeErasedAllocator, size, alignment, ptr_out);
+            return vtable.alloc(typeErasedAllocator, size, alignment, ptrOut);
         }
 
-        // template<typename T>
-        // ResultOr<Slice<T>> allocSlice(size_t size, size_t alignment)
-        // {
-        //     auto maybe_memory = vtable.alloc(typeErasedAllocator, sizeof(T) * size, alignment);
-        //     if (!maybe_memory) {
-        //         return maybe_memory.error();
-        //     }
-
-        //     return Acamarachi::Core::Slice((T *)maybe_memory.result(), size);
-        // }
-
-        // template<typename T>
-        // ResultOr<Slice<T>> callocSlice(size_t size, size_t alignment)
-        // {
-        //     auto maybe_memory = vtable.alloc(typeErasedAllocator, sizeof(T) * size, alignment);
-        //     if (!maybe_memory) {
-        //         return maybe_memory.error();
-        //     }
-        //     void *mem = maybe_memory.result();
-        //     memset(mem, 0, sizeof(T) * size);
-        //     return Acamarachi::Core::Slice((T *)mem, size);
-        // }
-
-        Result realloc(void *old_ptr, size_t size, void **ptr_out)
+        template <typename T>
+        Result allocSlice(size_t size, size_t alignment, Slice<T> &slice)
         {
-            return vtable.realloc(typeErasedAllocator, old_ptr, size, 16, ptr_out);
+            void *ptr = nullptr;
+            Result res = vtable.alloc(typeErasedAllocator, sizeof(T) * size, alignment, &ptr);
+            if (res != Result::Success)
+                return res;
+
+            slice = std::move(Acamarachi::Core::Slice((T *)ptr, size));
+            return Result::Success;
         }
 
-        Result reallocAlignment(void *old_ptr, size_t size, size_t alignment, void **ptr_out)
+        template <typename T>
+        Result callocSlice(size_t size, size_t alignment, Slice<T> &slice)
         {
-            return vtable.realloc(typeErasedAllocator, old_ptr, size, alignment, ptr_out);
+            void *ptr = nullptr;
+            Result res = vtable.alloc(typeErasedAllocator, sizeof(T) * size, alignment, &ptr);
+            if (res != Result::Success)
+                return res;
+
+            memset(ptr, 0, sizeof(T) * size);
+            slice = std::move(Acamarachi::Core::Slice((T *)ptr, size));
+            return Result::Success;
         }
 
-        // template <typename T>
-        // ResultOr<Slice<T>> reallocSlice(Slice<T> &oldSlice, size_t size, size_t alignment)
-        // {
-        //     auto maybe_memory = vtable.realloc(typeErasedAllocator, (void *)oldSlice.ptr, sizeof(T) * size, alignment);
-        //     if (!maybe_memory)
-        //     {
-        //         return maybe_memory.error();
-        //     }
-        //     oldSlice = std::move(Slice<T>());
-        //     return Slice<T>((T *)maybe_memory.result(), size);
-        // }
+        Result realloc(void *old_ptr, size_t size, void **ptrOut)
+        {
+            return vtable.realloc(typeErasedAllocator, old_ptr, size, 16, ptrOut);
+        }
+
+        Result reallocAlignment(void *old_ptr, size_t size, size_t alignment, void **ptrOut)
+        {
+            return vtable.realloc(typeErasedAllocator, old_ptr, size, alignment, ptrOut);
+        }
+
+        template <typename T>
+        Result reallocSlice(Slice<T> &oldSlice, size_t size, size_t alignment, Slice<T> &newSlice)
+        {
+            void *ptr = nullptr;
+            Result res = vtable.realloc(typeErasedAllocator, sizeof(T) * size, alignment, &ptr);
+            if (res != Result::Success)
+                return res;
+
+            oldSlice = std::move(Slice<T>());
+            newSlice = std::move(Slice<T>((T *)ptr, size));
+            return Result::Success;
+        }
 
         Result free(void *ptr)
         {
             return vtable.free(typeErasedAllocator, ptr);
         }
 
-        // template <typename T>
-        // void free(Slice<T> &slice)
-        // {
-        //     vtable.free(typeErasedAllocator, (void *)slice.ptr);
-        //     slice = std::move(Slice<T>());
-        // }
+        template <typename T>
+        Result free(Slice<T> &slice)
+        {
+            const Result res = vtable.free(typeErasedAllocator, (void *)slice.ptr);
+            slice = std::move(Slice<T>());
+            return res;
+        }
     };
 
     Interface getCAllocatorInterface();
