@@ -11,6 +11,29 @@ namespace Acamarachi::Core
     class File
     {
     public:
+        enum class Result
+        {
+            Success,
+            OutOfMemory,
+            SharingViolation,
+            PathAlreadyExists,
+            FileNotFound,
+            AccessDenied,
+            PipeBusy,
+            NameTooLong,
+            Unexpected,
+            IsDirectory,
+            SymbolicLinkLoop,
+            ProcessFdQuotaExceeded,
+            SystemFdQuotaExceeded,
+            NoSpaceLeft,
+            Overflow,
+            ReadOnlyFileSystem,
+            WouldBlock,
+            TextBusy,
+            PointsOutOfMemory,
+        };
+
         using Stat = struct stat;
 
         enum class OpenMode
@@ -35,15 +58,14 @@ namespace Acamarachi::Core
             return *this;
         }
 
-        static ErrorOr<File> open(const char *, OpenMode);
-        static ErrorOr<File> open(const std::string &, OpenMode);
+        Result open(const char *, OpenMode);
+        Result open(const std::string &, OpenMode);
 
-        ErrorOr<ssize_t> read(char *, size_t n);
-        ErrorOr<ssize_t> read(Slice<char> &);
-        ErrorOr<Slice<char>> readAll(Allocator::Interface);
+        Result read(char *, size_t, ssize_t &);
+        Result read(Slice<char> &, ssize_t &);
+        Slice<char> readAll(Allocator::Interface, Result&);
 
-
-        ErrorOr<_off_t> getFileSize();
+        off_t getFileSize(Result &res);
         _off_t fileSize() const { return size; }
 
         void closeFile();

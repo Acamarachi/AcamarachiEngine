@@ -72,8 +72,9 @@ namespace Acamarachi::Core::Allocator
         {
             void *ptr = nullptr;
             Result res = vtable.alloc(typeErasedAllocator, sizeof(T) * size, alignment, &ptr);
-            if (res != Result::Success)
+            if (res != Result::Success) {
                 return res;
+            }
 
             slice = std::move(Acamarachi::Core::Slice((T *)ptr, size));
             return Result::Success;

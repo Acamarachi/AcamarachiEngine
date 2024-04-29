@@ -18,7 +18,7 @@ namespace Acamarachi::Core::Allocator
 
     static CAllocatorInfo infos = {};
 
-    static Result interface_malloc(void *allocator, size_t size, size_t alignment,  void **ptrOut)
+    static Result interface_malloc(void *allocator, size_t size, size_t alignment, void **ptrOut)
     {
         (void)allocator;
         (void)alignment;
