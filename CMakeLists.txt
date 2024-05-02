@@ -9,37 +9,15 @@ if(POLICY CMP0141)
   set(CMAKE_MSVC_DEBUG_INFORMATION_FORMAT "$<IF:$<AND:$<C_COMPILER_ID:MSVC>,$<CXX_COMPILER_ID:MSVC>>,$<$<CONFIG:Debug,RelWithDebInfo>:EditAndContinue>,$<$<CONFIG:Debug,RelWithDebInfo>:ProgramDatabase>>")
 endif()
 
-set(
-  ACAMARACHi_CORE_SOURCES
-  ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
-)
+# Define Core sources list
+set(ACAMARACHi_CORE_SOURCES)
+add_subdirectory(src/Core)
 
-set(
-  ACAMARACHi_VULKAN_SOURCES
+set(ACAMARACHi_MATHS_SOURCES)
+add_subdirectory(src/maths)
 
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Error.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Error.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Context.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Context.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Instance.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Instance.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Device.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Device.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Surface.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Surface.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipeline.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/GraphicPipelineBuilder.cpp
-  #${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.hpp
-  #${CMAKE_SOURCE_DIR}/src/vulkan/Allocator.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.hpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.cpp
-  ${CMAKE_SOURCE_DIR}/src/vulkan/ShaderModule.hpp
-)
+set(ACAMARACHi_VULKAN_SOURCES)
+add_subdirectory(src/vulkan)
 
 add_executable(${PROJECT_NAME})
 target_sources(
@@ -52,7 +30,7 @@ target_sources(
   ${CMAKE_SOURCE_DIR}/src/config.h
   ${CMAKE_SOURCE_DIR}/src/macros.h
   ${ACAMARACHi_CORE_SOURCES}
-  ${ACAMARACHi_VULKAN_SOURCES}
+  ${ACAMARACHi_MATHS_SOURCES}
 )
 
 #add build property
