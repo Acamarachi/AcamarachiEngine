@@ -9,154 +9,136 @@ const auto cRead = &read;
 namespace Acamarachi::Core
 {
 
-    ErrorOr<File> File::open(const char *filepath, OpenMode mode)
+    File::Result File::open(const char *filepath, OpenMode mode)
     {
-        File f = {};
-        f.fd = _open(filepath, (int)mode);
-        if (f.fd == -1)
+        fd = _open(filepath, (int)mode);
+        if (fd == -1)
         {
             switch (errno)
             {
             case EACCES:
-                return ErrorCode::AccessDenied;
+                return File::Result::AccessDenied;
             case EEXIST:
-                return ErrorCode::PathAlreadyExists;
+                return File::Result::PathAlreadyExists;
             case EISDIR:
-                return ErrorCode::IsDirectory;
+                return File::Result::IsDirectory;
             case ELOOP:
-                return ErrorCode::SymbolicLinkLoop;
+                return File::Result::SymbolicLinkLoop;
             case EMFILE:
-                return ErrorCode::ProcessFdQuotaExceeded;
+                return File::Result::ProcessFdQuotaExceeded;
             case ENAMETOOLONG:
-                return ErrorCode::NameTooLong;
+                return File::Result::NameTooLong;
             case ENFILE:
-                return ErrorCode::SystemFdQuotaExceeded;
+                return File::Result::SystemFdQuotaExceeded;
             case ENOENT:
-                return ErrorCode::FileNotFound;
+                return File::Result::FileNotFound;
             case ENOSPC:
-                return ErrorCode::NoSpaceLeft;
+                return File::Result::NoSpaceLeft;
             case EOVERFLOW:
-                return ErrorCode::Overflow;
+                return File::Result::Overflow;
             case EROFS:
-                return ErrorCode::ReadOnlyFileSystem;
+                return File::Result::ReadOnlyFileSystem;
             case EAGAIN:
-                return ErrorCode::WouldBlock;
+                return File::Result::WouldBlock;
             case ENOMEM:
-                return ErrorCode::OutOfMemory;
+                return File::Result::OutOfMemory;
             case ETXTBSY:
-                return ErrorCode::TextBusy;
+                return File::Result::TextBusy;
             default:
-                return ErrorCode::Unexpected;
+                return File::Result::Unexpected;
             }
         }
-        auto maybe_size = f.getFileSize();
-        if (!maybe_size)
+        Result getFileSizeResult = File::Result::Success;
+        size = getFileSize(getFileSizeResult);
+        if (getFileSizeResult != File::Result::Success)
         {
-            return maybe_size.error();
+            return getFileSizeResult;
         }
-        f.size = maybe_size.result();
-        f.mode = mode;
-        return f;
+        mode = mode;
+        return File::Result::Success;
     }
 
-    ErrorOr<File> File::open(const std::string &filepath, OpenMode mode)
+    File::Result File::open(const std::string &filepath, OpenMode mode)
     {
         return open(filepath.c_str(), mode);
     }
 
-    ErrorOr<ssize_t> File::read(char *buffer, size_t n)
+    File::Result File::read(char *buffer, size_t n, ssize_t &r)
     {
         assert(mode != File::OpenMode::Write);
         assert(fd != -1);
-        ssize_t r = cRead(fd, buffer, (unsigned int)n);
+        r = cRead(fd, buffer, (unsigned int)n);
         if (r == -1)
         {
             switch (errno)
             {
             case EFAULT:
-                return ErrorCode::PointsOutOfMemory;
+                return File::Result::PointsOutOfMemory;
             default:
-                return ErrorCode::Unexpected;
+                return File::Result::Unexpected;
             }
         }
-        return r;
+        return File::Result::Success;
     }
 
-    ErrorOr<ssize_t> File::read(Slice<char> &slice)
+    File::Result File::read(Slice<char> &slice, ssize_t &r)
     {
-        assert(mode != File::OpenMode::Write);
-        assert(fd != -1);
-        ssize_t r = cRead(fd, slice.ptr, (unsigned int)slice.len);
-        if (r == -1)
-        {
-            switch (errno)
-            {
-            case EFAULT:
-                return ErrorCode::PointsOutOfMemory;
-            default:
-                return ErrorCode::Unexpected;
-            }
-        }
-        return r;
+        return read(slice.ptr, slice.len, r);
     }
 
     // Using mingw64 read replace '\n\r' to '\n', but mingw64 stat counts '\r' in the file size.
     // This lead to over allocation of memory, 1 byte per newline.
-    ErrorOr<Slice<char>> File::readAll(Allocator::Interface allocator)
+    Slice<char> File::readAll(Allocator::Interface allocator, Result &res)
     {
+        res = File::Result::Success;
         assert(mode != File::OpenMode::Write);
-        auto maybe_slice = allocator.allocSlice<char>(size, 1);
-        if (!maybe_slice)
-            return maybe_slice.error();
-
-        Slice<char> slice = maybe_slice.result();
-        ssize_t r = cRead(fd, slice.ptr, (unsigned int)slice.len + 1);
-        if (r == -1)
+        Slice<char> slice = Slice<char>();
+        auto allocRes = allocator.callocSlice(size, 1, slice);
+        if (allocRes != Allocator::Result::Success)
         {
-            allocator.free(slice);
-            switch (errno)
-            {
-            case EFAULT:
-                return ErrorCode::PointsOutOfMemory;
-            default:
-                return ErrorCode::Unexpected;
-            }
+            std::cerr << "Allocator failed with: " << (int)allocRes << "\n";
+            res = File::Result::OutOfMemory;
+            return Slice<char>();
         }
-        for (size_t i = (size_t)r; i < slice.len; ++i) { slice[i] = 0; }
+
+        ssize_t r = 0;
+        Result readResult = read(slice, r);
+        if ((readResult = read(slice, r)) != File::Result::Success)
+        {
+            res = readResult;
+            allocator.free(slice);
+            return Slice<char>();
+        }
 
         return slice;
     }
 
-    ErrorOr<_off_t> File::getFileSize()
+    off_t File::getFileSize(File::Result &res)
     {
-        if (size < 0)
+        struct stat buf;
+        if (fstat(fd, &buf) == -1)
         {
-            struct stat buf;
-            if (fstat(fd, &buf) == -1)
+            switch (errno)
             {
-                switch (errno)
-                {
-                case EACCES:
-                    return ErrorCode::AccessDenied;
-                case EFAULT:
-                    return ErrorCode::PointsOutOfMemory;
-                case ENOMEM:
-                    return ErrorCode::OutOfMemory;
-                default:
-                    return ErrorCode::Unexpected;
-                }
+            case EACCES:
+                res = File::Result::AccessDenied;
+                return 0;
+            case EFAULT:
+                res = File::Result::PointsOutOfMemory;
+                return 0;
+            case ENOMEM:
+                res = File::Result::OutOfMemory;
+                return 0;
+            default:
+                res = File::Result::Unexpected;
+                return 0;
             }
-            return buf.st_size;
         }
-        else
-        {
-            return size;
-        }
+        return buf.st_size;
     }
 
     void File::closeFile()
     {
         close(fd);
     }
-
 }

@@ -18,47 +18,50 @@ namespace Acamarachi::Core::Allocator
 
     static CAllocatorInfo infos = {};
 
-    static ErrorOr<void *> interface_malloc(void *allocator, size_t size, size_t alignment)
+    static Result interface_malloc(void *allocator, size_t size, size_t alignment, void **ptrOut)
     {
         (void)allocator;
         (void)alignment;
         void *ptr = malloc(size);
         if (!ptr)
         {
-            return ErrorCode::OutOfMemory;
+            return Result::OutOfMemory;
         }
         else
         {
             infos.total_bytes_used += size;
             infos.bytes_used += size;
             infos.n_allocation += 1;
-            return ptr;
+            *ptrOut = ptr;
+            return Result::Success;
         }
     }
 
-    static ErrorOr<void *> interface_realloc(void *allocator, void *oldPtr, size_t size, size_t alignment)
+    static Result interface_realloc(void *allocator, void *oldPtr, size_t size, size_t alignment, void **ptr_out)
     {
         (void)allocator;
         (void)alignment;
         void *ptr = realloc(oldPtr, size);
         if (!ptr)
         {
-            return ErrorCode::OutOfMemory;
+            return Result::OutOfMemory;
         }
         else
         {
             infos.total_bytes_used += size;
             infos.n_allocation += 1;
             infos.n_free += 1;
-            return ptr;
+            *ptr_out = ptr;
+            return Result::Success;
         }
     }
 
-    static void interface_free(void *allocator, void *ptr)
+    static Result interface_free(void *allocator, void *ptr)
     {
         (void)allocator;
         infos.n_free += 1;
         free(ptr);
+        return Result::Success;
     }
 
     Interface getCAllocatorInterface()

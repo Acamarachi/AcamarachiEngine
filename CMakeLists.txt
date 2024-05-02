@@ -13,15 +13,8 @@ endif()
 set(ACAMARACHi_CORE_SOURCES)
 add_subdirectory(src/Core)
 
-set(
-  ACAMARACHi_MATHS_SOURCES
-  ${CMAKE_SOURCE_DIR}/src/maths/vector.hpp
-  ${CMAKE_SOURCE_DIR}/src/maths/matrix.hpp
-  ${CMAKE_SOURCE_DIR}/src/maths/linear.hpp 
-  ${CMAKE_SOURCE_DIR}/src/maths/linear.cpp 
-  ${CMAKE_SOURCE_DIR}/src/maths/vector.cpp 
-  ${CMAKE_SOURCE_DIR}/src/maths/matrix.cpp
-)
+set(ACAMARACHi_MATHS_SOURCES)
+add_subdirectory(src/maths)
 
 add_executable(${PROJECT_NAME})
 target_sources(

@@ -1,0 +1,10 @@
+set(
+    ACAMARACHi_MATHS_SOURCES
+    ${CMAKE_SOURCE_DIR}/src/maths/linear.hpp
+    ${CMAKE_SOURCE_DIR}/src/maths/linear.cpp
+    ${CMAKE_SOURCE_DIR}/src/maths/matrix.hpp
+    ${CMAKE_SOURCE_DIR}/src/maths/matrix.cpp
+    ${CMAKE_SOURCE_DIR}/src/maths/vector.hpp
+    ${CMAKE_SOURCE_DIR}/src/maths/vector.cpp
+    PARENT_SCOPE
+)

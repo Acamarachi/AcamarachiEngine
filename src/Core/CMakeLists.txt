@@ -1,5 +1,4 @@
-list(
-    APPEND
+set(
     ACAMARACHi_CORE_SOURCES
     ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
     ${CMAKE_SOURCE_DIR}/src/Core/Slice.hpp
@@ -9,4 +8,5 @@ list(
     ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.hpp
     ${CMAKE_SOURCE_DIR}/src/Core/Allocator/Interface.cpp
     ${CMAKE_SOURCE_DIR}/src/Core/MSVC/unistd.h
+    PARENT_SCOPE
 )
