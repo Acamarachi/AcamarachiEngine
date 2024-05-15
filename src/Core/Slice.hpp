@@ -12,7 +12,6 @@
 
 namespace Acamarachi::Core
 {
-
     template <typename T>
     class Slice
     {
@@ -95,6 +94,8 @@ namespace Acamarachi::Core
             other.len = 0;
             return *this;
         }
+
+        Slice<T>& operator=(Slice<T>& other) noexcept = default;
 
         Iterator begin() { return Iterator(ptr); }
         Iterator end() { return Iterator(ptr + len); }

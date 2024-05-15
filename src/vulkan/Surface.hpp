@@ -1,11 +1,9 @@
-#ifndef ACAMARACHI_VULKAN_SURFACE
-#define ACAMARACHI_VULKAN_SURFACE 1
+#pragma once
 
 #include <vulkan/vulkan.h>
-#include <vector>
 
-#include "Error.hpp"
 #include "Instance.hpp"
+#include "Result.hpp"
 
 namespace Acamarachi::Vulkan
 {
@@ -15,19 +13,15 @@ namespace Acamarachi::Vulkan
     class Surface
     {
     public:
-        using Error = Core::Expected<Surface, VulkanError>;
 
-        VkSurfaceKHR handle;
+        VkSurfaceKHR handle = VK_NULL_HANDLE;
 
         Surface() = default;
-        Surface(const Surface &) = default;
+        Surface(const Surface &) = delete;
         ~Surface() = default;
 
-        static Error initialize(Instance &instance, void* window, CreateWindowSurfaceFunction*);
-
-        void deinitialize(Acamarachi::Vulkan::Instance& instance);
+        Result initialize(Instance &instance, void *window, CreateWindowSurfaceFunction *fnc);
+        void deinitialize(Instance& instance);
     };
 
 }
-
-#endif

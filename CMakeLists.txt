@@ -31,6 +31,7 @@ target_sources(
   ${CMAKE_SOURCE_DIR}/src/macros.h
   ${ACAMARACHi_CORE_SOURCES}
   ${ACAMARACHi_MATHS_SOURCES}
+  ${ACAMARACHi_VULKAN_SOURCES}
 )
 
 #add build property

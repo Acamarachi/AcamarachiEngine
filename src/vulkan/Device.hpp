@@ -1,27 +1,44 @@
-#ifndef ACAMARACHI_VULKAN_DEVICE
-#define ACAMARACHI_VULKAN_DEVICE 1
-
 #include <vulkan/vulkan.h>
 #include <vector>
 #include <limits>
 
-#include "Error.hpp"
+#include "../Core/Slice.hpp"
+#include "../Core/Allocator/Interface.hpp"
+#include "Result.hpp"
 #include "Instance.hpp"
 #include "Surface.hpp"
 
 namespace Acamarachi::Vulkan
 {
-
-    struct Queue {
+    struct Queue
+    {
         uint32_t familyIndex = std::numeric_limits<uint32_t>::max();
         VkQueue handle = VK_NULL_HANDLE;
+    };
+
+    struct DeviceInitializationInfo
+    {
+        DeviceInitializationInfo(Instance &instance,
+        Surface &surface,
+        Core::Slice<const char *>& requiredExtensions,
+        Core::Slice<const char *>& requiredValidationLayers,
+        Core::Slice<VkPhysicalDevice>& physicalDevices)
+            : instance(instance), 
+              surface(surface),
+              requiredExtensions(requiredExtensions), 
+              requiredValidationLayers(requiredValidationLayers), 
+              physicalDevices(physicalDevices) {}
+
+        Instance &instance;
+        Surface &surface;
+        Core::Slice<const char *>& requiredExtensions;
+        Core::Slice<const char *>& requiredValidationLayers;
+        Core::Slice<VkPhysicalDevice>& physicalDevices;
     };
 
     class Device
     {
     public:
-        using Error = Core::Expected<Device, VulkanError>;
-
         VkPhysicalDevice physicalDevice = VK_NULL_HANDLE;
         VkDevice handle = VK_NULL_HANDLE;
         VkSurfaceCapabilitiesKHR surfaceCapabilites = {};
@@ -32,27 +49,15 @@ namespace Acamarachi::Vulkan
 
         VkPhysicalDeviceMemoryProperties memoryProperties;
 
-        // To create a device you need a working Vulkan instance, otherwise it will not work
-        // as the devices a get through the instance
         Device() = default;
-        Device(const Device &) = default;
+        Device(const Device &) = delete;
         ~Device() = default;
 
-        // Initialize the device and ask the instance to find some physical devices
-        // then it will update physicalDevice and handle
-        static Error initialize(Instance& instance, Surface& surface, std::vector<const char *> requiredExtensions, std::vector<char const *> requiredValidationLayers);
+        Result initialize(Core::Allocator::Interface &allocator, DeviceInitializationInfo info);
         void deinitialize();
 
-        // Perform a check to see if the device is what we want
-        bool isPhysicalDeviceSuitable(VkPhysicalDevice device);
-        VkResult updateSurfaceCapabilities(Acamarachi::Vulkan::Surface& surface);
-
     private:
-        bool findQueueFamilies(Acamarachi::Vulkan::Surface& surface);
-
-        //TODO: ADD RATING FOR THE BEST PHYSICAL DEVICE
+        Result isPhysicalDeviceSuitable(VkPhysicalDevice);
+        Result findQueueFamilies(Core::Allocator::Interface &allocator, Surface &surface);
     };
-
 }
-
-#endif

@@ -12,6 +12,10 @@
 
 namespace Acamarachi::Vulkan
 {
+    enum class Result {
+        Success,
+    };
+
     using CreateWindowSurfaceFunction = VkResult (VkInstance instance, void* window, const VkAllocationCallbacks* callbacks, VkSurfaceKHR *surface);
     using GetRequiredExtensions = const char ** (uint32_t *);
 
