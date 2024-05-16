@@ -1,10 +1,7 @@
-#ifndef ACAMARACHI_VULKAN_SWAPCHAIN
-#define ACAMARACHI_VULKAN_SWAPCHAIN 1
+#pragma once
 
 #include <vulkan/vulkan.h>
-#include <vector>
 
-#include "Error.hpp"
 #include "Device.hpp"
 #include "Surface.hpp"
 
@@ -13,22 +10,20 @@ namespace Acamarachi::Vulkan
 
     class Swapchain {
     public:
-        using Error = Core::Expected<Swapchain, VulkanError>;
-
         VkSwapchainKHR handle = VK_NULL_HANDLE;
         VkSurfaceFormatKHR surfaceFormat;
         VkPresentModeKHR presentMode;
         VkExtent2D extent;
-        std::vector<VkImage> images;
-        std::vector<VkImageView> imageViews;
+
+        Core::Slice<VkImage> images;
+        Core::Slice<VkImageView> imageViews;
 
         Swapchain() = default;
         Swapchain(const Swapchain&) = default;
-
         ~Swapchain() = default;
 
-        static Error initialize(Device& device, Surface& surface, uint32_t width, uint32_t height);
-        void deinitialize(Device& device);
+        Result initialize(Core::Allocator::Interface& allocator, Device& device, Surface& surface, uint32_t width, uint32_t height);
+        void deinitialize(Core::Allocator::Interface& allocator, Device& device);
 
     private:
         VkResult findSurfaceFormat(Device& device, Surface& surface, VkSurfaceFormatKHR* requested);
@@ -38,5 +33,3 @@ namespace Acamarachi::Vulkan
     };
 
 }
-
-#endif

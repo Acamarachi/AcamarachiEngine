@@ -10,13 +10,13 @@ if(POLICY CMP0141)
 endif()
 
 # Define Core sources list
-set(ACAMARACHi_CORE_SOURCES)
+set(ACAMARACHI_CORE_SOURCES)
 add_subdirectory(src/Core)
 
-set(ACAMARACHi_MATHS_SOURCES)
+set(ACAMARACHI_MATHS_SOURCES)
 add_subdirectory(src/maths)
 
-set(ACAMARACHi_VULKAN_SOURCES)
+set(ACAMARACHI_VULKAN_SOURCES)
 add_subdirectory(src/vulkan)
 
 add_executable(${PROJECT_NAME})
@@ -29,9 +29,9 @@ target_sources(
   ${CMAKE_SOURCE_DIR}/src/platform.h
   ${CMAKE_SOURCE_DIR}/src/config.h
   ${CMAKE_SOURCE_DIR}/src/macros.h
-  ${ACAMARACHi_CORE_SOURCES}
-  ${ACAMARACHi_MATHS_SOURCES}
-  ${ACAMARACHi_VULKAN_SOURCES}
+  ${ACAMARACHI_CORE_SOURCES}
+  ${ACAMARACHI_MATHS_SOURCES}
+  ${ACAMARACHI_VULKAN_SOURCES}
 )
 
 #add build property

@@ -1,5 +1,5 @@
 set(
-    ACAMARACHi_CORE_SOURCES
+    ACAMARACHI_CORE_SOURCES
     ${CMAKE_SOURCE_DIR}/src/Core/Expected.hpp
     ${CMAKE_SOURCE_DIR}/src/Core/Slice.hpp
     ${CMAKE_SOURCE_DIR}/src/Core/File.hpp

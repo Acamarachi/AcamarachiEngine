@@ -3,6 +3,17 @@
 
 namespace Acamarachi::Vulkan
 {
+    bool debuggerEnabled(Core::Slice<const char *> &requiredExtensions)
+    {
+        for (size_t i = 0; i < requiredExtensions.len; i += 1)
+        {
+            if (strcmp(requiredExtensions[i], "VK_EXT_debug_utils") == 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     static VkBool32 debugMessengerCallback(VkDebugUtilsMessageSeverityFlagBitsEXT severity, VkDebugUtilsMessageTypeFlagsEXT type, const VkDebugUtilsMessengerCallbackDataEXT *data, void *userdata)
     {
         (void)userdata;
@@ -32,27 +43,10 @@ namespace Acamarachi::Vulkan
         instanceCreateInfo.ppEnabledExtensionNames = requiredExtensions.ptr;
 
         VkResult result = vkCreateInstance(&instanceCreateInfo, 0, &handle);
-        switch (result)
-        {
-        case VK_SUCCESS:
-            break;
-        case VK_ERROR_OUT_OF_HOST_MEMORY:
-            return Result::OutOfHostMemory;
-        case VK_ERROR_OUT_OF_DEVICE_MEMORY:
-            return Result::OutOfDeviceMemory;
-        case VK_ERROR_INITIALIZATION_FAILED:
-            return Result::InitializationFailed;
-        case VK_ERROR_LAYER_NOT_PRESENT:
-            return Result::MissingLayer;
-        case VK_ERROR_EXTENSION_NOT_PRESENT:
-            return Result::MissingExtension;
-        case VK_ERROR_INCOMPATIBLE_DRIVER:
-            return Result::ImcompatibleDriver;
-        default:
-            return Result::Unexpected;
-        }
+        std::cout << result << "\n";
+        if (result != VK_SUCCESS) return fromVkResult<false>(result);
 
-        if (requiredValidationLayers.len != 0)
+        if (debuggerEnabled(requiredExtensions))
         {
             // VK_EXT_debug_utils allow more debug information to the user
             // for more info see : https://registry.khronos.org/vulkan/specs/1.3-extensions/man/html/VK_EXT_debug_utils.html

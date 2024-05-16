@@ -1,10 +1,12 @@
 set(
-    ACAMARACHi_VULKAN_SOURCES
+    ACAMARACHI_VULKAN_SOURCES
     ${CMAKE_SOURCE_DIR}/src/vulkan/Instance.hpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Instance.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Surface.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Surface.hpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Device.hpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Device.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.hpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.cpp
     PARENT_SCOPE
 )

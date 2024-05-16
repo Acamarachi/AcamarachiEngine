@@ -1,5 +1,5 @@
 set(
-    ACAMARACHi_MATHS_SOURCES
+    ACAMARACHI_MATHS_SOURCES
     ${CMAKE_SOURCE_DIR}/src/maths/linear.hpp
     ${CMAKE_SOURCE_DIR}/src/maths/linear.cpp
     ${CMAKE_SOURCE_DIR}/src/maths/matrix.hpp
