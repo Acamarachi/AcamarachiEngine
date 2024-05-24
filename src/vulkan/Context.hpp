@@ -3,7 +3,7 @@
 
 #include <vulkan/vulkan.h>
 
-#include "Error.hpp"
+#include "Result.hpp"
 #include "Instance.hpp"
 #include "Surface.hpp"
 #include "Device.hpp"
@@ -12,10 +12,6 @@
 
 namespace Acamarachi::Vulkan
 {
-    enum class Result {
-        Success,
-    };
-
     using CreateWindowSurfaceFunction = VkResult (VkInstance instance, void* window, const VkAllocationCallbacks* callbacks, VkSurfaceKHR *surface);
     using GetRequiredExtensions = const char ** (uint32_t *);
 
@@ -28,14 +24,12 @@ namespace Acamarachi::Vulkan
         Swapchain swapchain;
         FrameInformation frameInfo;
 
-        using Error = Core::Expected<Context, VulkanError>;
-
         Context() = default;
         Context(const Context&) = default;
         ~Context() = default;
 
-        void initialize(const char *appName, GetRequiredExtensions* getRequiredExtensions, void* window, CreateWindowSurfaceFunction *createWindowSurface);
-        void deinitialize();
+        Result initialize(Core::Allocator::Interface&, const char *appName, GetRequiredExtensions* getRequiredExtensions, void* window, CreateWindowSurfaceFunction *createWindowSurface);
+        void deinitialize(Core::Allocator::Interface&);
     };
 }
 

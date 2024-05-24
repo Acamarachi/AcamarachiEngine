@@ -12,5 +12,7 @@ set(
     ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.hpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/Context.hpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/Context.cpp
     PARENT_SCOPE
 )
