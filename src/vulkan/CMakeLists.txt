@@ -14,5 +14,7 @@ set(
     ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Context.hpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Context.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/ShaderModule.hpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/ShaderModule.cpp
     PARENT_SCOPE
 )
