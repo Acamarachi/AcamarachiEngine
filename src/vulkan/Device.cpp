@@ -93,6 +93,7 @@ namespace Acamarachi::Vulkan
         vkGetDeviceQueue(handle, transferQueue.familyIndex, 0, &transferQueue.handle);
 
         vkGetPhysicalDeviceMemoryProperties(physicalDevice, &memoryProperties);
+        vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physicalDevice, info.surface.handle, &surfaceCapabilites);
 
         return state;
     }

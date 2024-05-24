@@ -8,5 +8,9 @@ set(
     ${CMAKE_SOURCE_DIR}/src/vulkan/Device.cpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.hpp
     ${CMAKE_SOURCE_DIR}/src/vulkan/Swapchain.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.hpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/Utils.cpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.hpp
+    ${CMAKE_SOURCE_DIR}/src/vulkan/FrameInformation.cpp
     PARENT_SCOPE
 )

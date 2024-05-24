@@ -27,7 +27,9 @@ namespace Acamarachi::Vulkan
             return Result::NoSuitablePresentMode;
         }
 
+        std::cout << "Extent " << this->extent.width << " " << extent.height << "\n";
         findExtent(device);
+        std::cout << "Extent " << this->extent.width << " " << extent.height << "\n";
         uint32_t imageCount = findImageCount(device);
 
         uint32_t queueFamilies[2] = {device.graphicQueue.familyIndex, device.presentQueue.familyIndex};
@@ -156,6 +158,7 @@ namespace Acamarachi::Vulkan
 
     void Swapchain::findExtent(Device &device)
     {
+        std::cout << "Width: " << device.surfaceCapabilites.currentExtent.width << "\n";
         if (device.surfaceCapabilites.currentExtent.width != std::numeric_limits<uint32_t>::max())
         {
             extent = device.surfaceCapabilites.currentExtent;

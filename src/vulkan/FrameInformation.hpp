@@ -4,6 +4,7 @@
 #include <vulkan/vulkan.h>
 #include <vector>
 
+#include "Result.hpp"
 #include "Device.hpp"
 #include "Swapchain.hpp"
 
@@ -17,14 +18,13 @@ namespace Acamarachi::Vulkan
         VkCommandBuffer primaryCommandBuffer = VK_NULL_HANDLE;
 
         VkFence renderFence = VK_NULL_HANDLE;
-        VkSemaphore swapchainSemaphore;
-        VkSemaphore renderSemaphore;
+        VkSemaphore swapchainSemaphore = VK_NULL_HANDLE;
+        VkSemaphore renderSemaphore = VK_NULL_HANDLE;
     } FrameManagementData;
 
     class FrameInformation
     {
     public:
-        using Error = Core::Expected<FrameInformation, VulkanError>;
 
         FrameManagementData frameData[FRAME_BUFFERING];
         std::size_t currentFrameIndex = 0;
@@ -33,12 +33,12 @@ namespace Acamarachi::Vulkan
         FrameInformation(const FrameInformation &) = default;
         ~FrameInformation() = default;
 
-        static Error initialize(Device &device);
+        Result initialize(Device& device);
         void deinitialize(Device &device);
 
         FrameManagementData getCurrentFrameData();
 
-        bool draw(Device &device, Swapchain& swapchain);
+        Result draw(Device &device, Swapchain& swapchain);
     };
 
 }

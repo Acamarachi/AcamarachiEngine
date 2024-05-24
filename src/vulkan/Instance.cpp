@@ -43,7 +43,6 @@ namespace Acamarachi::Vulkan
         instanceCreateInfo.ppEnabledExtensionNames = requiredExtensions.ptr;
 
         VkResult result = vkCreateInstance(&instanceCreateInfo, 0, &handle);
-        std::cout << result << "\n";
         if (result != VK_SUCCESS) return fromVkResult<false>(result);
 
         if (debuggerEnabled(requiredExtensions))
